@@ -2,13 +2,8 @@ var TILE_SIZE = 32;
 var SCREEN_WIDTH = 320;
 var SCREEN_HEIGHT = 240;
 
-// Grid / pixel conversions
-function g2p(grid) {
-  return {x:Math.floor(grid.x) * TILE_SIZE, y:Math.floor(grid.y) * TILE_SIZE};
-}
-function p2g(pixel) {
-  return {
-    x:Math.floor(pixel.x / TILE_SIZE),
-    y:Math.floor(pixel.y / TILE_SIZE)
-  };
+// http://stackoverflow.com/a/9071606/2038264
+function choose(choices) {
+  var index = Math.floor(Math.random() * choices.length);
+  return choices[index];
 }
