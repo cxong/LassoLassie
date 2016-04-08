@@ -30,7 +30,7 @@ GameState.prototype.create = function() {
   new Enemy(
     this.game,
     this.groups.enemies, this.groups.enemyBullets,
-    30, 40, EnemyTypes.outlaw);
+    80, 60, EnemyTypes.outlaw);
   new Enemy(
     this.game,
     this.groups.enemies, this.groups.enemyBullets,
@@ -77,6 +77,10 @@ GameState.prototype.update = function() {
   if (this.keys.fire.isDown) {
     this.player.fire();
   }
+
+  // Depth sort
+  this.groups.enemies.sort(
+    'y', Phaser.Group.SORT_ASCENDING);
 
   // TODO: firing, lassoing, spawning
   // TODO: collisions
