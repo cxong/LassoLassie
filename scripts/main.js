@@ -15,12 +15,13 @@ GameState.prototype.create = function() {
   this.groups = {
     bg: this.game.add.group(),
     sprites: this.game.add.group(),
+    bullets: this.game.add.group(),
     dialogs: this.game.add.group()
   };
 
   this.player = new Player(
-    this.game, SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, []);
-  this.groups.sprites.add(this.player);
+    this.game, this.groups.sprites, this.groups.bullets,
+    SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, []);
   this.dialog = new Dialog(this.game, this.groups.dialogs,0, 0);
   // Hide dialog initially
   this.groups.dialogs.alpha = 0;
@@ -53,6 +54,11 @@ GameState.prototype.update = function() {
     dy = 1;
   }
   this.player.move(dx, dy);
+
+  // firing
+  if (this.keys.fire.isDown) {
+    this.player.fire();
+  }
 
   // TODO: firing, lassoing, spawning
   // TODO: collisions
