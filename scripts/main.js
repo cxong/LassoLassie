@@ -14,14 +14,32 @@ GameState.prototype.create = function() {
 
   this.groups = {
     bg: this.game.add.group(),
-    sprites: this.game.add.group(),
-    bullets: this.game.add.group(),
+    enemies: this.game.add.group(),
+    players: this.game.add.group(),
+    enemyBullets: this.game.add.group(),
+    playerBullets: this.game.add.group(),
     dialogs: this.game.add.group()
   };
 
   this.player = new Player(
-    this.game, this.groups.sprites, this.groups.bullets,
+    this.game,
+    this.groups.players, this.groups.playerBullets,
     SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, []);
+
+  // Add some enemies
+  new Enemy(
+    this.game,
+    this.groups.enemies, this.groups.enemyBullets,
+    30, 40, EnemyTypes.outlaw);
+  new Enemy(
+    this.game,
+    this.groups.enemies, this.groups.enemyBullets,
+    90, 50, EnemyTypes.outlaw);
+  new Enemy(
+    this.game,
+    this.groups.enemies, this.groups.enemyBullets,
+    200, 90, EnemyTypes.outlaw);
+
   this.dialog = new Dialog(this.game, this.groups.dialogs,0, 0);
   // Hide dialog initially
   this.groups.dialogs.alpha = 0;
