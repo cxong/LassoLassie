@@ -82,8 +82,18 @@ GameState.prototype.update = function() {
   this.groups.enemies.sort(
     'y', Phaser.Group.SORT_ASCENDING);
 
-  // TODO: firing, lassoing, spawning
-  // TODO: collisions
+  // Player bullets to enemy
+  if (this.player.canHit()) {
+    this.game.physics.arcade.overlap(
+      this.player.crosshair, this.groups.enemies,
+      function(crosshair, enemy) {
+        // TODO: enemy kill effects
+        enemy.kill();
+      }
+    );
+  }
+
+  // TODO: lassoing, spawning
   // TODO: enemy movement
   // TODO: enemy spawning
   // TODO: bullet/lasso overlap

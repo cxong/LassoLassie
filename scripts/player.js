@@ -10,9 +10,12 @@ var Player = function(game, group, bulletGroup, x, y, soundStrings) {
   //this.animations.add('bob', [0, 1], 4, true);
   //this.animations.play('bob');
 
-  var crosshair = game.make.sprite(0, -60, 'crosshair');
-  crosshair.anchor.setTo(0.5);
-  this.addChild(crosshair);
+  this.crosshair = game.make.sprite(0, -60, 'crosshair');
+  game.physics.enable(
+    this.crosshair, Phaser.Physics.ARCADE);
+  this.crosshair.anchor.setTo(0.5);
+  this.crosshair.body.setSize(1, 1);
+  this.addChild(this.crosshair);
 
   this.bullet = game.add.sprite(0, 0, 'bullet');
   bulletGroup.add(this.bullet);
@@ -23,6 +26,9 @@ var Player = function(game, group, bulletGroup, x, y, soundStrings) {
   this.fireCounter = 0;
   this.FIRE_DURATION_TOTAL = 500;
   this.FIRE_FREEZE_DURATION = 300;
+  this.BULLET_LIFESPAN = 200;
+  this.bulletReady = false;
+  this.bulletHasHit = false;
 
   this.sounds = soundStrings.map(function(str) {
     return {str: str, sound: game.add.audio(str)};
@@ -50,10 +56,12 @@ Player.prototype.fire = function() {
     return;
   }
   this.bullet.revive(1);
-  this.bullet.lifespan = 200;
+  this.bullet.lifespan = this.BULLET_LIFESPAN;
   this.bullet.body.velocity.setTo(0, -300);
   this.bullet.position = this.position.clone();
   this.fireCounter = this.FIRE_DURATION_TOTAL;
+  this.bulletReady = false;
+  this.bulletHasHit = false;
   // TODO: firing animation
   this.body.velocity.setTo(0);
 };
@@ -61,5 +69,16 @@ Player.prototype.fire = function() {
 Player.prototype.update = function() {
   if (this.fireCounter > 0) {
     this.fireCounter -= this.game.time.elapsed;
+    if (this.fireCounter < this.FIRE_DURATION_TOTAL - this.BULLET_LIFESPAN) {
+      if (!this.bulletHasHit && !this.bulletReady) {
+        this.bulletReady = true;
+      } else {
+        this.bulletHasHit = true;
+      }
+    }
   }
+};
+
+Player.prototype.canHit = function() {
+  return this.bulletReady && !this.bulletHasHit;
 };
