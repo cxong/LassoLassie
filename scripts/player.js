@@ -10,6 +10,10 @@ var Player = function(game, group, bulletGroup, x, y, soundStrings) {
   //this.animations.add('bob', [0, 1], 4, true);
   //this.animations.play('bob');
 
+  var crosshair = game.make.sprite(0, -60, 'crosshair');
+  crosshair.anchor.setTo(0.5);
+  this.addChild(crosshair);
+
   this.bullet = game.add.sprite(0, 0, 'bullet');
   bulletGroup.add(this.bullet);
   game.physics.enable(this.bullet, Phaser.Physics.ARCADE);
@@ -47,7 +51,7 @@ Player.prototype.fire = function() {
   }
   this.bullet.revive(1);
   this.bullet.lifespan = 200;
-  this.bullet.body.velocity.setTo(0, -400);
+  this.bullet.body.velocity.setTo(0, -300);
   this.bullet.position = this.position.clone();
   this.fireCounter = this.FIRE_DURATION_TOTAL;
   // TODO: firing animation

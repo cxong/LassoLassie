@@ -11,7 +11,7 @@ var assets = {
     ['cowboy', 34, 35],
     ['bandito', 42, 38],
   ],
-  images: ['bullet']
+  images: ['bullet', 'crosshair']
 }
 
 BasicGame.Preload.prototype = {
