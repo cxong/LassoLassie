@@ -27,8 +27,16 @@ var Enemy = function(
   this.captured = false;
 
   // State machine
-  this.state = 'idle';
-  this.stateCounter = 0;
+  // Initialise state to 'entering' - running onto
+  // the field
+  this.state = 'entering';
+  this.stateCounter = Math.random() * 500 + 500;
+  // TODO: running animation
+  if (this.isEnemy) {
+    this.body.velocity.y = this.enemyType.speed * 2;
+  } else {
+    this.body.velocity.y = -this.enemyType.speed * 2;
+  }
   this.fireCounter = 0;
   this.fireDirection = null;
 
@@ -56,6 +64,9 @@ Enemy.prototype.update = function() {
     stateChange = true;
   }
   switch (this.state) {
+    case 'entering':
+    // State change managed in constructor
+    break;
     case 'idle':
     if (stateChange) {
       this.body.velocity.setTo(0);
