@@ -5,7 +5,7 @@ BasicGame.Preload = function (game) {
 
 var assets = {
   spritesheets: [
-    ['lassie', 35, 42],
+    ['lassie', 24, 24],
     ['dialog', 320, 240],
     ['outlaw', 24, 24],
     ['cowboy', 24, 24],

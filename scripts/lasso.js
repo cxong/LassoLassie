@@ -19,7 +19,7 @@ var Lasso = function(
   this.reversed = false;
 
   // Add a rope that stretches from this
-  this.rope = game.make.sprite(13, 10, 'rope');
+  this.rope = game.make.sprite(9, 10, 'rope');
   this.rope.anchor.setTo(0.5, 1);
   this.rope.scale.setTo(1, -1);
   this.yStart = y;
