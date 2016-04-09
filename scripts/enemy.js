@@ -159,11 +159,16 @@ Enemy.prototype.fire = function() {
     this.fireCounter -= this.game.time.elapsed;
   } else {
     this.fireCounter = this.enemyType.fireCounter;
+    var bulletKey = 'enemy_bullet';
+    var explosionKey = 'enemy_explosion';
+    if (!this.isEnemy) {
+      bulletKey = 'ally_bullet';
+      explosionKey = 'ally_explosion';
+    }
     new Bullet(
       this.game, this.bulletGroup, this.hitGroup,
       this.enemyType.bulletLifespan,
-      'enemy_bullet', 'enemy_explosion',
-      this.x, this.y,
+      bulletKey, explosionKey, this.x, this.y,
       this.fireDirection.x, this.fireDirection.y
     );
   }

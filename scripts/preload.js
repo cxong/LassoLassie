@@ -14,6 +14,7 @@ var assets = {
   ],
   images: [
     'outlaw_icon', 'cowboy_icon', 'bandito_icon',
+    'ally_bullet', 'ally_explosion',
     'enemy_bullet', 'enemy_explosion',
     'crosshair', 'health', 'lasso', 'lasso_hit',
     'player_bullet', 'player_explosion', 'rope'
