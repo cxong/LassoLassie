@@ -14,6 +14,14 @@ var Lasso = function(
   this.lifespan = lifespan;
   this.lifespanSave = lifespan;
   this.reversed = false;
+
+  // Add a rope that stretches from this
+  this.rope = game.make.sprite(13, 10, 'rope');
+  this.rope.anchor.setTo(0.5, 1);
+  this.rope.scale.setTo(1, -1);
+  this.yStart = y;
+  this.addChild(this.rope);
+
   this.exploded = false;
   this.hitGroup = hitGroup;
   this.game = game;
@@ -36,4 +44,8 @@ Lasso.prototype.update = function() {
     hit.lifespan = 100;
     this.hitGroup.add(hit);
   }
+  // Stretch the rope
+  this.rope.scale.setTo(
+    1, Math.min(1, this.y - this.yStart + 10)
+  );
 };

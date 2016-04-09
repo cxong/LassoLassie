@@ -14,7 +14,7 @@ var assets = {
   images: [
     'enemy_bullet', 'enemy_explosion',
     'crosshair', 'health', 'lasso', 'lasso_hit',
-    'player_bullet', 'player_explosion'
+    'player_bullet', 'player_explosion', 'rope'
   ]
 }
 
