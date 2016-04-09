@@ -1,7 +1,7 @@
 var EnemyTypes = {
   outlaw: {
     name: 'outlaw',
-    speed: 15,
+    speed: 20,
     stateCounter: 2000,
     fireCounter: 1500,
     spread: 30,
@@ -12,7 +12,11 @@ var EnemyTypes = {
 var Enemy = function(
   game, group, bulletGroup, hitGroup, friendlyGroup,
   x, y, enemyType, isEnemy) {
-  Phaser.Sprite.call(this, game, x, y, enemyType.name);
+  var key = enemyType.name;
+  if (!isEnemy) {
+    key += '_ally';
+  }
+  Phaser.Sprite.call(this, game, x, y, key);
   group.add(this);
   game.physics.enable(this, Phaser.Physics.ARCADE);
   this.body.collideWorldBounds = true;
@@ -59,8 +63,32 @@ Enemy.prototype.update = function() {
     break;
     case 'move':
     if (stateChange) {
-      var v = new Phaser.Point(
-        choose([-1, 1]), Math.random() - 0.5);
+      var targetPosition = null;
+      if (Math.random() < 0.3) {
+        // Move towards an enemy
+        targetPosition = this.getClosestTargetPosition();
+      }
+      var v;
+      if (targetPosition) {
+        // Stay in front of the enemy
+        if (this.isEnemy) {
+          targetPosition.y -= 60;
+        } else {
+          targetPosition.y += 60;
+        }
+        v = Phaser.Point.subtract(
+          targetPosition, this.position
+        );
+        // Add a random offset
+        v.add(
+          (Math.random() - 0.5) * this.enemyType.spread,
+          (Math.random() - 0.5) * this.enemyType.spread
+        );
+      } else {
+        // Wander randomly
+        v = new Phaser.Point(
+          choose([-1, 1]), Math.random() - 0.5);
+      }
       v = v.normalize();
       v.x *= this.enemyType.speed;
       v.y *= this.enemyType.speed;
@@ -72,21 +100,10 @@ Enemy.prototype.update = function() {
       // Find a new direction to fire
       // Randomly choose to fire in the general direction
       // of the player
-      // TODO: fire in general direction of allies too
       var targetPosition = null;
       if (Math.random() < 0.3) {
         // Fire at closest target
-        var minDistance = -1;
-        this.friendlyGroup.forEach(function(friendly) {
-          var distance = this.game.physics.arcade.distanceBetween(
-            this, friendly
-          );
-          if (targetPosition === null ||
-            minDistance > distance) {
-            targetPosition = friendly.position;
-            minDistance = distance;
-          }
-        }, this);
+        targetPosition = this.getClosestTargetPosition();
       }
       if (!targetPosition) {
         // target a random point on the field
@@ -119,6 +136,22 @@ Enemy.prototype.update = function() {
     this.body.velocity.setTo(0);
     break;
   }
+};
+
+Enemy.prototype.getClosestTargetPosition = function() {
+  var targetPosition = null;
+  var minDistance = -1;
+  this.friendlyGroup.forEach(function(friendly) {
+    var distance = this.game.physics.arcade.distanceBetween(
+      this, friendly
+    );
+    if (targetPosition === null ||
+      minDistance > distance) {
+      targetPosition = friendly.position.clone();
+      minDistance = distance;
+    }
+  }, this);
+  return targetPosition;
 };
 
 Enemy.prototype.fire = function() {

@@ -151,6 +151,8 @@ GameState.prototype.update = function() {
   // Depth sort
   this.groups.enemies.sort(
     'y', Phaser.Group.SORT_ASCENDING);
+  this.groups.players.sort(
+    'y', Phaser.Group.SORT_ASCENDING);
 
   // Player bullets to enemy
   this.game.physics.arcade.overlap(
