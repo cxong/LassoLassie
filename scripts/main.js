@@ -111,7 +111,16 @@ GameState.prototype.update = function() {
   );
 
   // Enemy bullets to players
-
+  this.game.physics.arcade.overlap(
+    this.groups.enemyHits, this.groups.players,
+    function(hit, player) {
+      if (player.invincibilityCounter > 0) {
+        // Can't kill when invincible
+        return;
+      }
+      player.kill();
+    }
+  );
 
   // TODO: lassoing, spawning
   // TODO: enemy movement

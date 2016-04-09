@@ -27,6 +27,8 @@ var Player = function(
   this.bulletReady = false;
   this.bulletHasHit = false;
 
+  this.invincibilityCounter = 2000;
+
   this.sounds = soundStrings.map(function(str) {
     return {str: str, sound: game.add.audio(str)};
   });
@@ -41,6 +43,9 @@ Player.prototype.move = function(dx, dy) {
   if (this.fireCounter > this.FIRE_FREEZE_DURATION) {
     return;
   }
+  if (!this.alive) {
+    return;
+  }
   if (dx === 0 && dy === 0) {
     // TODO: idle animation
     this.body.velocity.setTo(0);
@@ -52,6 +57,9 @@ Player.prototype.move = function(dx, dy) {
 
 Player.prototype.fire = function() {
   if (this.fireCounter > 0) {
+    return;
+  }
+  if (!this.alive) {
     return;
   }
   new Bullet(
@@ -68,6 +76,14 @@ Player.prototype.fire = function() {
 };
 
 Player.prototype.update = function() {
+  if (this.invincibilityCounter > 0) {
+    this.invincibilityCounter -= this.game.time.elapsed;
+    // Blink when invincible
+    this.visible = this.invincibilityCounter / 4 % 4 > 1;
+  } else {
+    this.visible = this.alive;
+  }
+
   if (this.fireCounter > 0) {
     this.fireCounter -= this.game.time.elapsed;
     if (this.fireCounter < this.FIRE_DURATION_TOTAL - this.BULLET_LIFESPAN) {
