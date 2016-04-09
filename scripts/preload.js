@@ -12,6 +12,7 @@ var assets = {
     ['bandito', 42, 38],
   ],
   images: [
+    'outlaw_icon', 'cowboy_icon', 'bandito_icon',
     'enemy_bullet', 'enemy_explosion',
     'crosshair', 'health', 'lasso', 'lasso_hit',
     'player_bullet', 'player_explosion', 'rope'

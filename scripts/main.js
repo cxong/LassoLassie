@@ -22,6 +22,7 @@ GameState.prototype.create = function() {
     playerHits: this.game.add.group(),
     lasso: this.game.add.group(),
     dialogs: this.game.add.group(),
+    spawnerIcons: this.game.add.group(),
     lifeCounters: this.game.add.group()
   };
 
@@ -33,6 +34,11 @@ GameState.prototype.create = function() {
       )
     );
   }
+
+  // Spawn counters
+  this.spawner = new Spawner(
+    this.game, this.groups.spawnerIcons
+  );
 
   this.spawnPlayer();
 
