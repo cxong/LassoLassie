@@ -22,5 +22,18 @@ var Spawner = function(game, group) {
 
 Spawner.prototype.add = function(key) {
   this.counts[key]++;
+  this.updateText(key);
+};
+
+Spawner.prototype.trySpawn = function(key) {
+  if (this.counts[key] > 0) {
+    this.counts[key]--;
+    this.updateText(key);
+    return true;
+  }
+  return false;
+};
+
+Spawner.prototype.updateText = function(key) {
   this.texts[key].text = this.counts[key];
 };

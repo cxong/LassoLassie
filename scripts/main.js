@@ -73,10 +73,25 @@ GameState.prototype.create = function() {
     right: Phaser.Keyboard.RIGHT,
     fire: Phaser.Keyboard.Z,
     lasso: Phaser.Keyboard.X,
-    spawn1: this.game.input.keyboard.addKey(Phaser.Keyboard.ONE),
-    spawn2: this.game.input.keyboard.addKey(Phaser.Keyboard.TWO),
-    spawn3: this.game.input.keyboard.addKey(Phaser.Keyboard.THREE)
+    spawn1: Phaser.Keyboard.ONE,
+    spawn2: Phaser.Keyboard.TWO,
+    spawn3: Phaser.Keyboard.THREE
   });
+  this.keys.spawn1.onDown.add(function() {
+    if (this.spawner.trySpawn('outlaw')) {
+      this.spawnAlly('outlaw');
+    }
+  }, this);
+  this.keys.spawn2.onDown.add(function() {
+    if (this.spawner.trySpawn('cowboy')) {
+      this.spawnAlly('cowboy');
+    }
+  }, this);
+  this.keys.spawn2.onDown.add(function() {
+    if (this.spawner.trySpawn('bandito')) {
+      this.spawnAlly('bandito');
+    }
+  }, this);
 };
 
 GameState.prototype.spawnPlayer = function() {
@@ -93,6 +108,19 @@ GameState.prototype.spawnPlayer = function() {
     this.groups.lifeCounters.getFirstExists().destroy();
   }
 };
+
+GameState.prototype.spawnAlly = function(key) {
+  // Spawn ally near where player is
+  var x = Phaser.Math.clamp(
+    (Math.random() - 0.5) * 100 + this.player.x,
+    0, SCREEN_WIDTH);
+  new Enemy(
+    this.game,
+    this.groups.players, this.groups.playerBullets,
+    this.groups.playerHits,
+    this.groups.enemies,
+    x, SCREEN_HEIGHT, EnemyTypes[key], false);
+}
 
 GameState.prototype.update = function() {
   // Move using arrow keys
@@ -164,8 +192,5 @@ GameState.prototype.update = function() {
     }
   }
 
-  // TODO: lassoing, spawning
-  // TODO: enemy movement
   // TODO: enemy spawning
-  // TODO: bullet/lasso overlap
 };
