@@ -129,6 +129,7 @@ GameState.prototype.update = function() {
     this.groups.playerHits, this.groups.enemies,
     function(hit, enemy) {
       // TODO: enemy kill effects
+      hit.kill();
       enemy.kill();
     }
   );
@@ -138,7 +139,9 @@ GameState.prototype.update = function() {
     this.groups.lasso, this.groups.enemies,
     function(lasso, enemy) {
       enemy.capture();
-    }
+      lasso.kill();
+      this.spawner.add(enemy.key);
+    }, null, this
   );
 
   // Enemy bullets to players
