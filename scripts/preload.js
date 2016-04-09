@@ -9,9 +9,10 @@ var assets = {
     ['dialog', 320, 240],
     ['outlaw', 24, 24],
     ['cowboy', 24, 24],
-    ['bandito', 42, 38],
+    ['bandito', 24, 24],
     ['outlaw_ally', 24, 24],
     ['cowboy_ally', 24, 24],
+    ['bandito_ally', 24, 24]
   ],
   images: [
     'outlaw_icon', 'cowboy_icon', 'bandito_icon',

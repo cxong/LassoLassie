@@ -9,11 +9,19 @@ var EnemyTypes = {
   },
   cowboy: {
     name: 'cowboy',
-    speed: 40,
-    stateCounter: 2000,
-    fireCounter: 1500,
-    spread: 30,
+    speed: 30,
+    stateCounter: 1500,
+    fireCounter: 1000,
+    spread: 40,
     bulletLifespan: 1300
+  },
+  bandito: {
+    name: 'bandito',
+    speed: 15,
+    stateCounter: 2500,
+    fireCounter: 1000,
+    spread: 20,
+    bulletLifespan: 2000
   }
 };
 

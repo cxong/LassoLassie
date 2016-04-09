@@ -47,8 +47,8 @@ GameState.prototype.create = function() {
   this.spawnEnemy('outlaw');
   this.spawnEnemy('cowboy');
   this.spawnEnemy('cowboy');
-  this.spawnEnemy('outlaw');
-  this.spawnEnemy('outlaw');
+  this.spawnEnemy('bandito');
+  this.spawnEnemy('bandito');
 
   this.dialog = new Dialog(this.game, this.groups.dialogs,0, 0);
   // Hide dialog initially
