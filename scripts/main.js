@@ -20,6 +20,7 @@ GameState.prototype.create = function() {
     playerBullets: this.game.add.group(),
     enemyHits: this.game.add.group(),
     playerHits: this.game.add.group(),
+    lasso: this.game.add.group(),
     dialogs: this.game.add.group(),
     lifeCounters: this.game.add.group()
   };
@@ -80,7 +81,7 @@ GameState.prototype.spawnPlayer = function() {
     this.player = new Player(
       this.game,
       this.groups.players, this.groups.playerBullets,
-      this.groups.playerHits,
+      this.groups.playerHits, this.groups.lasso,
       SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, []);
     this.playerRespawnCounter = 2000;
     this.groups.lifeCounters.getFirstExists().destroy();
@@ -106,6 +107,11 @@ GameState.prototype.update = function() {
   // firing
   if (this.keys.fire.isDown) {
     this.player.fire();
+  }
+
+  // Lassoing
+  if (this.keys.lasso.isDown) {
+    this.player.lasso();
   }
 
   // Depth sort

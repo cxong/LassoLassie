@@ -1,5 +1,5 @@
 var Player = function(
-  game, group, bulletGroup, hitGroup,
+  game, group, bulletGroup, hitGroup, lassoGroup,
   x, y, soundStrings) {
   Phaser.Sprite.call(this, game, x, y, 'lassie');
   group.add(this);
@@ -22,10 +22,10 @@ var Player = function(
   // When firing, the player is frozen for a bit
   this.fireCounter = 0;
   this.FIRE_DURATION_TOTAL = 500;
+  this.LASSO_DURATION_TOTAL = 1000;
   this.FIRE_FREEZE_DURATION = 300;
   this.BULLET_LIFESPAN = 200;
-  this.bulletReady = false;
-  this.bulletHasHit = false;
+  this.LASSO_LIFESPAN = 400;
 
   this.invincibilityCounter = 2000;
 
@@ -35,6 +35,7 @@ var Player = function(
   this.game = game;
   this.hitGroup = hitGroup;
   this.bulletGroup = bulletGroup;
+  this.lassoGroup = lassoGroup;
 };
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
@@ -69,9 +70,24 @@ Player.prototype.fire = function() {
     this.x, this.y, 0, -300
   );
   this.fireCounter = this.FIRE_DURATION_TOTAL;
-  this.bulletReady = false;
-  this.bulletHasHit = false;
   // TODO: firing animation
+  this.body.velocity.setTo(0);
+};
+
+Player.prototype.lasso = function() {
+  if (this.fireCounter > 0) {
+    return;
+  }
+  if (!this.alive) {
+    return;
+  }
+  new Lasso(
+    this.game, this.bulletGroup, this.lassoGroup,
+    this.LASSO_LIFESPAN,
+    this.x, this.y, 0, -150
+  );
+  this.fireCounter = this.LASSO_DURATION_TOTAL;
+  // TODO: lasso animation
   this.body.velocity.setTo(0);
 };
 
@@ -86,16 +102,5 @@ Player.prototype.update = function() {
 
   if (this.fireCounter > 0) {
     this.fireCounter -= this.game.time.elapsed;
-    if (this.fireCounter < this.FIRE_DURATION_TOTAL - this.BULLET_LIFESPAN) {
-      if (!this.bulletHasHit && !this.bulletReady) {
-        this.bulletReady = true;
-      } else {
-        this.bulletHasHit = true;
-      }
-    }
   }
-};
-
-Player.prototype.canHit = function() {
-  return this.bulletReady && !this.bulletHasHit;
 };
