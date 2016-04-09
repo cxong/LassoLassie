@@ -43,24 +43,11 @@ GameState.prototype.create = function() {
   this.spawnPlayer();
 
   // Add some enemies
-  new Enemy(
-    this.game,
-    this.groups.enemies, this.groups.enemyBullets,
-    this.groups.enemyHits,
-    this.groups.players,
-    80, 60, EnemyTypes.outlaw, true);
-  new Enemy(
-    this.game,
-    this.groups.enemies, this.groups.enemyBullets,
-    this.groups.enemyHits,
-    this.groups.players,
-    90, 50, EnemyTypes.outlaw, true);
-  new Enemy(
-    this.game,
-    this.groups.enemies, this.groups.enemyBullets,
-    this.groups.enemyHits,
-    this.groups.players,
-    200, 90, EnemyTypes.outlaw, true);
+  this.spawnEnemy('outlaw');
+  this.spawnEnemy('outlaw');
+  this.spawnEnemy('outlaw');
+  this.spawnEnemy('outlaw');
+  this.spawnEnemy('outlaw');
 
   this.dialog = new Dialog(this.game, this.groups.dialogs,0, 0);
   // Hide dialog initially
@@ -120,7 +107,18 @@ GameState.prototype.spawnAlly = function(key) {
     this.groups.playerHits,
     this.groups.enemies,
     x, SCREEN_HEIGHT, EnemyTypes[key], false);
-}
+};
+
+GameState.prototype.spawnEnemy = function(key) {
+  // Spawn enemy along top
+  new Enemy(
+    this.game,
+    this.groups.enemies, this.groups.enemyBullets,
+    this.groups.enemyHits,
+    this.groups.players,
+    Math.random() * SCREEN_WIDTH, 0,
+    EnemyTypes[key], true);
+};
 
 GameState.prototype.update = function() {
   // Move using arrow keys
