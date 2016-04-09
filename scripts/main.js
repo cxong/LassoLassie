@@ -30,15 +30,18 @@ GameState.prototype.create = function() {
   new Enemy(
     this.game,
     this.groups.enemies, this.groups.enemyBullets,
-    80, 60, EnemyTypes.outlaw);
+    this.groups.players,
+    80, 60, EnemyTypes.outlaw, true);
   new Enemy(
     this.game,
     this.groups.enemies, this.groups.enemyBullets,
-    90, 50, EnemyTypes.outlaw);
+    this.groups.players,
+    90, 50, EnemyTypes.outlaw, true);
   new Enemy(
     this.game,
     this.groups.enemies, this.groups.enemyBullets,
-    200, 90, EnemyTypes.outlaw);
+    this.groups.players,
+    200, 90, EnemyTypes.outlaw, true);
 
   this.dialog = new Dialog(this.game, this.groups.dialogs,0, 0);
   // Hide dialog initially
