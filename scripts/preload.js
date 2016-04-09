@@ -12,7 +12,8 @@ var assets = {
     ['bandito', 42, 38],
   ],
   images: [
-    'bullet', 'crosshair', 'health', 'player_bullet',
+    'enemy_bullet', 'enemy_explosion',
+    'crosshair', 'health', 'player_bullet',
     'player_explosion'
   ]
 }

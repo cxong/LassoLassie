@@ -10,7 +10,7 @@ var EnemyTypes = {
 };
 
 var Enemy = function(
-  game, group, bulletGroup, friendlyGroup,
+  game, group, bulletGroup, hitGroup, friendlyGroup,
   x, y, enemyType, isEnemy) {
   Phaser.Sprite.call(this, game, x, y, enemyType.name);
   group.add(this);
@@ -29,6 +29,7 @@ var Enemy = function(
 
   this.bulletGroup = bulletGroup;
   this.game = game;
+  this.hitGroup = hitGroup;
   this.friendlyGroup = friendlyGroup;
 };
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
@@ -121,14 +122,12 @@ Enemy.prototype.fire = function() {
     this.fireCounter -= this.game.time.elapsed;
   } else {
     this.fireCounter = this.enemyType.fireCounter;
-    var bullet = this.game.add.sprite(
-      this.x, this.y, 'bullet'
+    new Bullet(
+      this.game, this.bulletGroup, this.hitGroup,
+      this.enemyType.bulletLifespan,
+      'enemy_bullet', 'enemy_explosion',
+      this.x, this.y,
+      this.fireDirection.x, this.fireDirection.y
     );
-    bullet.lifespan = this.enemyType.bulletLifespan;
-    this.game.physics.enable(
-      bullet, Phaser.Physics.ARCADE);
-    bullet.anchor.setTo(0.5);
-    bullet.body.velocity = this.fireDirection.clone();
-    this.bulletGroup.add(bullet);
   }
 };

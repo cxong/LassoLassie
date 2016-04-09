@@ -43,16 +43,19 @@ GameState.prototype.create = function() {
   new Enemy(
     this.game,
     this.groups.enemies, this.groups.enemyBullets,
+    this.groups.enemyHits,
     this.groups.players,
     80, 60, EnemyTypes.outlaw, true);
   new Enemy(
     this.game,
     this.groups.enemies, this.groups.enemyBullets,
+    this.groups.enemyHits,
     this.groups.players,
     90, 50, EnemyTypes.outlaw, true);
   new Enemy(
     this.game,
     this.groups.enemies, this.groups.enemyBullets,
+    this.groups.enemyHits,
     this.groups.players,
     200, 90, EnemyTypes.outlaw, true);
 
