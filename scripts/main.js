@@ -127,6 +127,14 @@ GameState.prototype.update = function() {
     }
   );
 
+  // Lasso
+  this.game.physics.arcade.overlap(
+    this.groups.lasso, this.groups.enemies,
+    function(lasso, enemy) {
+      enemy.capture();
+    }
+  );
+
   // Enemy bullets to players
   this.game.physics.arcade.overlap(
     this.groups.enemyHits, this.groups.players,

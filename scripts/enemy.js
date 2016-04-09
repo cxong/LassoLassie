@@ -20,6 +20,7 @@ var Enemy = function(
   this.anchor.setTo(0.5);
   this.enemyType = enemyType;
   this.isEnemy = isEnemy;
+  this.captured = false;
 
   // State machine
   this.state = 'idle';
@@ -37,6 +38,9 @@ Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.update = function() {
   if (!this.alive) {
+    return;
+  }
+  if (this.captured) {
     return;
   }
   this.stateCounter -= this.game.time.elapsed;
@@ -130,4 +134,11 @@ Enemy.prototype.fire = function() {
       this.fireDirection.x, this.fireDirection.y
     );
   }
+};
+
+Enemy.prototype.capture = function() {
+  this.captured = true;
+  this.body.velocity.setTo(0, LASSO_DY);
+  this.lifespan = LASSO_LIFESPAN;
+  // TODO: captured animation
 };

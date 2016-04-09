@@ -1,18 +1,20 @@
+var LASSO_DY = 150;
+var LASSO_LIFESPAN = 400;
+
 // Lasso is a series of sprites that models the lifetime
 // of the lasso. The first stage is the travel, which
 // leaves a lasso "hit". The hit can collide with targets.
 // Finally the lasso returns, optionally pulling targets
 // back in
-var Lasso = function(
-  game, group, hitGroup, lifespan, x, y, dx, dy) {
+var Lasso = function(game, group, hitGroup, x, y) {
   Phaser.Sprite.call(this, game, x, y, 'lasso');
   group.add(this);
   game.physics.enable(this, Phaser.Physics.ARCADE);
-  this.body.velocity.setTo(dx, dy);
-  this.velocityReturn = new Phaser.Point(dx, -dy);
+  this.body.velocity.setTo(0, -LASSO_DY);
+  this.velocityReturn = new Phaser.Point(0, LASSO_DY);
   this.anchor.setTo(0.5);
-  this.lifespan = lifespan;
-  this.lifespanSave = lifespan;
+  this.lifespan = LASSO_LIFESPAN;
+  this.lifespanSave = LASSO_LIFESPAN;
   this.reversed = false;
 
   // Add a rope that stretches from this

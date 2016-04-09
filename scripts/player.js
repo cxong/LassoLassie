@@ -25,7 +25,6 @@ var Player = function(
   this.LASSO_DURATION_TOTAL = 1000;
   this.FIRE_FREEZE_DURATION = 300;
   this.BULLET_LIFESPAN = 200;
-  this.LASSO_LIFESPAN = 400;
 
   this.invincibilityCounter = 2000;
 
@@ -83,8 +82,7 @@ Player.prototype.lasso = function() {
   }
   new Lasso(
     this.game, this.bulletGroup, this.lassoGroup,
-    this.LASSO_LIFESPAN,
-    this.x, this.y, 0, -150
+    this.x, this.y
   );
   this.fireCounter = this.LASSO_DURATION_TOTAL;
   // TODO: lasso animation
