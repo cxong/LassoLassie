@@ -24,20 +24,16 @@ GameState.prototype.create = function() {
     lifeCounters: this.game.add.group()
   };
 
-  this.player = new Player(
-    this.game,
-    this.groups.players, this.groups.playerBullets,
-    this.groups.playerHits,
-    SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, []);
-
   // Life counters
-  for (var i = 0; i < 3; i++) {
+  for (var i = 2; i >= 0; i--) {
     this.groups.lifeCounters.add(
       this.game.make.sprite(
         10 + 16*i, SCREEN_HEIGHT - 10 - 16, 'health'
       )
     );
   }
+
+  this.spawnPlayer();
 
   // Add some enemies
   new Enemy(
@@ -74,6 +70,21 @@ GameState.prototype.create = function() {
     spawn2: this.game.input.keyboard.addKey(Phaser.Keyboard.TWO),
     spawn3: this.game.input.keyboard.addKey(Phaser.Keyboard.THREE)
   });
+};
+
+GameState.prototype.spawnPlayer = function() {
+  if (this.groups.lifeCounters.total === 0) {
+    console.log('GAME OVER!');
+    // TODO: game over screen, reset to title
+  } else {
+    this.player = new Player(
+      this.game,
+      this.groups.players, this.groups.playerBullets,
+      this.groups.playerHits,
+      SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, []);
+    this.playerRespawnCounter = 2000;
+    this.groups.lifeCounters.getFirstExists().destroy();
+  }
 };
 
 GameState.prototype.update = function() {
@@ -121,6 +132,14 @@ GameState.prototype.update = function() {
       player.kill();
     }
   );
+
+  // Player respawn
+  if (!this.player.alive) {
+    this.playerRespawnCounter -= this.game.time.elapsed;
+    if (this.playerRespawnCounter <= 0) {
+      this.spawnPlayer();
+    }
+  }
 
   // TODO: lassoing, spawning
   // TODO: enemy movement
