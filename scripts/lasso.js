@@ -6,7 +6,8 @@ var LASSO_LIFESPAN = 400;
 // leaves a lasso "hit". The hit can collide with targets.
 // Finally the lasso returns, optionally pulling targets
 // back in
-var Lasso = function(game, group, hitGroup, x, y) {
+var Lasso = function(
+  game, group, hitGroup, x, y, inSound) {
   Phaser.Sprite.call(this, game, x, y, 'lasso');
   group.add(this);
   game.physics.enable(this, Phaser.Physics.ARCADE);
@@ -27,6 +28,7 @@ var Lasso = function(game, group, hitGroup, x, y) {
   this.exploded = false;
   this.hitGroup = hitGroup;
   this.game = game;
+  this.inSound = inSound;
 };
 Lasso.prototype = Object.create(Phaser.Sprite.prototype);
 Lasso.prototype.constructor = Lasso;
@@ -35,6 +37,7 @@ Lasso.prototype.update = function() {
   if (!this.alive && !this.reversed) {
     // Leave an explosion and return
     this.reversed = true;
+    this.inSound.play();
     this.lifespan = this.lifespanSave;
     this.reset(this.x, this.y);
     this.body.velocity = this.velocityReturn;

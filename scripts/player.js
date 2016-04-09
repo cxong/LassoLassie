@@ -12,6 +12,12 @@ var Player = function(
   //this.animations.add('bob', [0, 1], 4, true);
   //this.animations.play('bob');
 
+  this.sounds = {
+    lasso_in: game.add.audio('lasso_in'),
+    lasso_out: game.add.audio('lasso_out'),
+    shoot: game.add.audio('shoot')
+  };
+
   this.crosshair = game.make.sprite(0, -60, 'crosshair');
   game.physics.enable(
     this.crosshair, Phaser.Physics.ARCADE);
@@ -28,9 +34,6 @@ var Player = function(
 
   this.invincibilityCounter = 2000;
 
-  this.sounds = soundStrings.map(function(str) {
-    return {str: str, sound: game.add.audio(str)};
-  });
   this.game = game;
   this.hitGroup = hitGroup;
   this.bulletGroup = bulletGroup;
@@ -71,6 +74,7 @@ Player.prototype.fire = function() {
   this.fireCounter = this.FIRE_DURATION_TOTAL;
   // TODO: firing animation
   this.body.velocity.setTo(0);
+  this.sounds.shoot.play();
 };
 
 Player.prototype.lasso = function() {
@@ -82,11 +86,12 @@ Player.prototype.lasso = function() {
   }
   new Lasso(
     this.game, this.bulletGroup, this.lassoGroup,
-    this.x, this.y
+    this.x, this.y, this.sounds.lasso_in
   );
   this.fireCounter = this.LASSO_DURATION_TOTAL;
   // TODO: lasso animation
   this.body.velocity.setTo(0);
+  this.sounds.lasso_out.play();
 };
 
 Player.prototype.update = function() {

@@ -20,6 +20,10 @@ var assets = {
     'enemy_bullet', 'enemy_explosion',
     'crosshair', 'health', 'lasso', 'lasso_hit',
     'player_bullet', 'player_explosion', 'rope'
+  ],
+  sounds: [
+    'catch', 'die', 'hit', 'lasso_in', 'lasso_out',
+    'shoot', 'spawn'
   ]
 }
 
@@ -44,8 +48,9 @@ BasicGame.Preload.prototype = {
     // TODO: music
     //this.game.load.audio('birds', 'sounds/birds.mp3');
 
-    // TODO: sounds
-    //this.game.load.audio('step', 'sounds/step.wav');
+    assets.sounds.map(function(i) {
+      basicGame.game.load.audio(i, 'sounds/' + i + '.wav');
+    });
   },
 
   create: function () {

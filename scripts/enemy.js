@@ -91,7 +91,7 @@ Enemy.prototype.update = function() {
     case 'move':
     if (stateChange) {
       var targetPosition = null;
-      if (Math.random() < 0.3) {
+      if (Math.random() < 0.5) {
         // Move towards an enemy
         targetPosition = this.getClosestTargetPosition();
       }
@@ -128,7 +128,7 @@ Enemy.prototype.update = function() {
       // Randomly choose to fire in the general direction
       // of the player
       var targetPosition = null;
-      if (Math.random() < 0.3) {
+      if (Math.random() < 0.5) {
         // Fire at closest target
         targetPosition = this.getClosestTargetPosition();
       }

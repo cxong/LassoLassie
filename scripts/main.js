@@ -9,7 +9,10 @@ GameState.prototype.create = function() {
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
   this.sounds = {
-    //tada: this.game.add.audio("tada")
+    catch: this.game.add.audio('catch'),
+    die: this.game.add.audio('die'),
+    hit: this.game.add.audio('hit'),
+    spawn: this.game.add.audio('spawn')
   };
 
   this.groups = {
@@ -75,7 +78,7 @@ GameState.prototype.create = function() {
       this.spawnAlly('cowboy');
     }
   }, this);
-  this.keys.spawn2.onDown.add(function() {
+  this.keys.spawn3.onDown.add(function() {
     if (this.spawner.trySpawn('bandito')) {
       this.spawnAlly('bandito');
     }
@@ -108,6 +111,7 @@ GameState.prototype.spawnAlly = function(key) {
     this.groups.playerHits,
     this.groups.enemies,
     x, SCREEN_HEIGHT, EnemyTypes[key], false);
+  this.sounds.spawn.play();
 };
 
 GameState.prototype.spawnEnemy = function(key) {
@@ -160,7 +164,8 @@ GameState.prototype.update = function() {
       // TODO: enemy kill effects
       hit.kill();
       enemy.kill();
-    }
+      this.sounds.hit.play();
+    }, null, this
   );
 
   // Lasso
@@ -170,6 +175,7 @@ GameState.prototype.update = function() {
       enemy.capture();
       lasso.kill();
       this.spawner.add(enemy.key);
+      this.sounds.catch.play();
     }, null, this
   );
 
@@ -182,7 +188,12 @@ GameState.prototype.update = function() {
         return;
       }
       player.kill();
-    }
+      if (player === this.player) {
+        this.sounds.die.play();
+      } else {
+        this.sounds.hit.play();
+      }
+    }, null, this
   );
 
   // Player respawn
