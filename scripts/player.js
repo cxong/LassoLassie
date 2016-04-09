@@ -1,4 +1,6 @@
-var Player = function(game, group, bulletGroup, x, y, soundStrings) {
+var Player = function(
+  game, group, bulletGroup, hitGroup,
+  x, y, soundStrings) {
   Phaser.Sprite.call(this, game, x, y, 'lassie');
   group.add(this);
   game.physics.enable(this, Phaser.Physics.ARCADE);
@@ -17,11 +19,6 @@ var Player = function(game, group, bulletGroup, x, y, soundStrings) {
   this.crosshair.body.setSize(1, 1);
   this.addChild(this.crosshair);
 
-  this.bullet = game.add.sprite(0, 0, 'bullet');
-  bulletGroup.add(this.bullet);
-  game.physics.enable(this.bullet, Phaser.Physics.ARCADE);
-  this.bullet.anchor.setTo(0.5);
-  this.bullet.kill();
   // When firing, the player is frozen for a bit
   this.fireCounter = 0;
   this.FIRE_DURATION_TOTAL = 500;
@@ -34,6 +31,8 @@ var Player = function(game, group, bulletGroup, x, y, soundStrings) {
     return {str: str, sound: game.add.audio(str)};
   });
   this.game = game;
+  this.hitGroup = hitGroup;
+  this.bulletGroup = bulletGroup;
 };
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
@@ -55,10 +54,12 @@ Player.prototype.fire = function() {
   if (this.fireCounter > 0) {
     return;
   }
-  this.bullet.revive(1);
-  this.bullet.lifespan = this.BULLET_LIFESPAN;
-  this.bullet.body.velocity.setTo(0, -300);
-  this.bullet.position = this.position.clone();
+  new Bullet(
+    this.game, this.bulletGroup, this.hitGroup,
+    this.BULLET_LIFESPAN,
+    'player_bullet', 'player_explosion',
+    this.x, this.y, 0, -300
+  );
   this.fireCounter = this.FIRE_DURATION_TOTAL;
   this.bulletReady = false;
   this.bulletHasHit = false;

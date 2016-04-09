@@ -18,13 +18,26 @@ GameState.prototype.create = function() {
     players: this.game.add.group(),
     enemyBullets: this.game.add.group(),
     playerBullets: this.game.add.group(),
-    dialogs: this.game.add.group()
+    enemyHits: this.game.add.group(),
+    playerHits: this.game.add.group(),
+    dialogs: this.game.add.group(),
+    lifeCounters: this.game.add.group()
   };
 
   this.player = new Player(
     this.game,
     this.groups.players, this.groups.playerBullets,
+    this.groups.playerHits,
     SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, []);
+
+  // Life counters
+  for (var i = 0; i < 3; i++) {
+    this.groups.lifeCounters.add(
+      this.game.make.sprite(
+        10 + 16*i, SCREEN_HEIGHT - 10 - 16, 'health'
+      )
+    );
+  }
 
   // Add some enemies
   new Enemy(
@@ -86,15 +99,16 @@ GameState.prototype.update = function() {
     'y', Phaser.Group.SORT_ASCENDING);
 
   // Player bullets to enemy
-  if (this.player.canHit()) {
-    this.game.physics.arcade.overlap(
-      this.player.crosshair, this.groups.enemies,
-      function(crosshair, enemy) {
-        // TODO: enemy kill effects
-        enemy.kill();
-      }
-    );
-  }
+  this.game.physics.arcade.overlap(
+    this.groups.playerHits, this.groups.enemies,
+    function(hit, enemy) {
+      // TODO: enemy kill effects
+      enemy.kill();
+    }
+  );
+
+  // Enemy bullets to players
+
 
   // TODO: lassoing, spawning
   // TODO: enemy movement
