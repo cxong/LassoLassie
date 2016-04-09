@@ -6,6 +6,14 @@ var EnemyTypes = {
     fireCounter: 1500,
     spread: 30,
     bulletLifespan: 1500
+  },
+  cowboy: {
+    name: 'cowboy',
+    speed: 40,
+    stateCounter: 2000,
+    fireCounter: 1500,
+    spread: 30,
+    bulletLifespan: 1300
   }
 };
 

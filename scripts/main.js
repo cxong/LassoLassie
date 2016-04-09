@@ -45,7 +45,8 @@ GameState.prototype.create = function() {
   // Add some enemies
   this.spawnEnemy('outlaw');
   this.spawnEnemy('outlaw');
-  this.spawnEnemy('outlaw');
+  this.spawnEnemy('cowboy');
+  this.spawnEnemy('cowboy');
   this.spawnEnemy('outlaw');
   this.spawnEnemy('outlaw');
 
