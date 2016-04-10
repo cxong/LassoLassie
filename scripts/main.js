@@ -49,7 +49,7 @@ GameState.prototype.start = function() {
   // Spawn player and enemies
 
   // Life counters
-  this.groups.lifeCounters.destroy();
+  this.groups.lifeCounters.destroy(true, true);
   for (var i = 2; i >= 0; i--) {
     this.groups.lifeCounters.add(
       this.game.make.sprite(
@@ -183,8 +183,9 @@ GameState.prototype.update = function() {
       function(lasso, enemy) {
         enemy.capture();
         lasso.kill();
-        this.spawner.add(enemy.key);
-        this.sounds.catch.play();
+        if (this.spawner.add(enemy.key)) {
+          this.sounds.catch.play();
+        }
       }, null, this
     );
 

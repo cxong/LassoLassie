@@ -21,8 +21,13 @@ var Spawner = function(game, group) {
 };
 
 Spawner.prototype.add = function(key) {
+  // Max counts
+  if (this.counts[key] >= 9) {
+    return false;
+  }
   this.counts[key]++;
   this.updateText(key);
+  return true;
 };
 
 Spawner.prototype.trySpawn = function(key) {
