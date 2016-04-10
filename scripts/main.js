@@ -129,7 +129,7 @@ GameState.prototype.spawnAlly = function(key) {
     this.groups.players, this.groups.playerBullets,
     this.groups.playerHits,
     this.groups.enemies, this.groups.bg,
-    x, SCREEN_HEIGHT, EnemyTypes[key], false);
+    x, SCREEN_HEIGHT, EnemyTypes[key], false, this.wave);
   this.sounds.spawn.play();
 };
 

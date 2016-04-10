@@ -31,7 +31,7 @@ var EnemyTypes = {
 var Enemy = function(
   game, group, bulletGroup, hitGroup, friendlyGroup,
   bgGroup,
-  x, y, enemyType, isEnemy) {
+  x, y, enemyType, isEnemy, wave) {
   var key = enemyType.name;
   if (!isEnemy) {
     key += '_ally';
@@ -44,6 +44,7 @@ var Enemy = function(
   this.anchor.setTo(0.5);
   this.enemyType = enemyType;
   this.isEnemy = isEnemy;
+  this.wave = wave;
   this.captured = false;
 
   // animations
@@ -58,9 +59,9 @@ var Enemy = function(
   this.stateCounter = Math.random() * 500 + 500;
   this.animations.play('walk');
   if (this.isEnemy) {
-    this.body.velocity.y = this.enemyType.speed * 2;
+    this.body.velocity.y = this.speed() * 2;
   } else {
-    this.body.velocity.y = -this.enemyType.speed * 2;
+    this.body.velocity.y = -this.speed() * 2;
   }
   this.fireCounter = 0;
   this.fireDirection = null;
@@ -129,8 +130,8 @@ Enemy.prototype.update = function() {
           choose([-1, 1]), Math.random() - 0.5);
       }
       v = v.normalize();
-      v.x *= this.enemyType.speed;
-      v.y *= this.enemyType.speed;
+      v.x *= this.speed();
+      v.y *= this.speed();
       this.body.velocity = v;
       this.animations.play('walk');
     }
@@ -246,4 +247,8 @@ Enemy.prototype.killAndLeaveCorpse = function() {
   corpse.animations.add('die', [6, 7], 2, false);
   corpse.animations.play('die');
   this.bgGroup.add(corpse);
+};
+
+Enemy.prototype.speed = function() {
+  return this.wave.speed() * this.enemyType.speed;
 };

@@ -27,5 +27,9 @@ Wave.prototype.spawnOne = function(key) {
     this.groups.enemyHits,
     this.groups.players, this.groups.bg,
     Math.random() * SCREEN_WIDTH, 0,
-    EnemyTypes[key], true);
+    EnemyTypes[key], true, this);
+};
+
+Wave.prototype.speed = function(speed) {
+  return Math.sqrt(this.wave) / 5 + 0.8;
 };
