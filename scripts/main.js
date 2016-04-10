@@ -257,8 +257,10 @@ GameState.prototype.update = function() {
   );
 
   // Enemy spawning
+  // Note: spawn next wave if less than half wave
+  // remaining
   if (this.wave &&
-    this.groups.enemies.countLiving() === 0) {
+    this.groups.enemies.countLiving() < this.wave.waveTotal() / 2) {
     this.wave.wave++;
     this.wave.spawn();
     this.setText('Wave ' + this.wave.wave);

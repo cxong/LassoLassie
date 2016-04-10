@@ -5,6 +5,10 @@ var Wave = function(game, groups) {
   this.groups = groups;
 };
 
+Wave.prototype.waveTotal = function() {
+  return 4 + Math.floor(Math.sqrt(this.wave)*2);
+};
+
 Wave.prototype.spawn = function() {
   var total = 4 + Math.floor(Math.sqrt(this.wave)*2);
   var choices = ['outlaw', 'cowboy', 'bandito'];
