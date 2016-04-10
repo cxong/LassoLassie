@@ -17,6 +17,8 @@ GameState.prototype.create = function() {
     spawn: this.game.add.audio('spawn')
   };
 
+  this.game.add.audio('lassolady').play('', 0, 0.7, true);
+
   this.groups = {
     ground: this.game.add.group(),
     bg: this.game.add.group(),

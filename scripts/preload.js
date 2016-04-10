@@ -23,7 +23,8 @@ var assets = {
   sounds: [
     'catch', 'die', 'hit', 'lasso_in', 'lasso_out',
     'nospawn', 'respawn', 'shoot', 'spawn'
-  ]
+  ],
+  music: ['lassolady']
 }
 
 BasicGame.Preload.prototype = {
@@ -45,9 +46,9 @@ BasicGame.Preload.prototype = {
     assets.images.map(function(i) {
       basicGame.game.load.image(i, 'images/' + i + '.png');
     });
-
-    // TODO: music
-    //this.game.load.audio('birds', 'sounds/birds.mp3');
+    assets.music.map(function(i) {
+      basicGame.game.load.audio(i, 'music/' + i + '.ogg');
+    });
 
     assets.sounds.map(function(i) {
       basicGame.game.load.audio(i, 'sounds/' + i + '.wav');
