@@ -23,7 +23,7 @@ var assets = {
   ],
   sounds: [
     'catch', 'die', 'hit', 'lasso_in', 'lasso_out',
-    'shoot', 'spawn'
+    'respawn', 'shoot', 'spawn'
   ]
 }
 

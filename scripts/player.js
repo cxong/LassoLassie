@@ -5,6 +5,8 @@ var Player = function(
   group.add(this);
   game.physics.enable(this, Phaser.Physics.ARCADE);
   this.body.collideWorldBounds = true;
+  // Slightly smaller body
+  this.body.setSize(16, 16);
   this.anchor.setTo(0.5);
   this.speed = 60;
   // TODO: check body

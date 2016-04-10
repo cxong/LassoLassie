@@ -4,7 +4,7 @@ var EnemyTypes = {
     speed: 20,
     stateCounter: 2000,
     fireCounter: 1500,
-    spread: 30,
+    spread: 15,
     bulletLifespan: 1500
   },
   cowboy: {
@@ -12,7 +12,7 @@ var EnemyTypes = {
     speed: 30,
     stateCounter: 1500,
     fireCounter: 1000,
-    spread: 40,
+    spread: 20,
     bulletLifespan: 1300
   },
   bandito: {
@@ -20,7 +20,7 @@ var EnemyTypes = {
     speed: 15,
     stateCounter: 2500,
     fireCounter: 1000,
-    spread: 20,
+    spread: 10,
     bulletLifespan: 2000
   }
 };

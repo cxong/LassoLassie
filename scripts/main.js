@@ -12,6 +12,7 @@ GameState.prototype.create = function() {
     catch: this.game.add.audio('catch'),
     die: this.game.add.audio('die'),
     hit: this.game.add.audio('hit'),
+    respawn: this.game.add.audio('respawn'),
     spawn: this.game.add.audio('spawn')
   };
 
@@ -201,8 +202,13 @@ GameState.prototype.update = function() {
     this.playerRespawnCounter -= this.game.time.elapsed;
     if (this.playerRespawnCounter <= 0) {
       this.spawnPlayer();
+      this.sounds.respawn.play();
     }
   }
 
   // TODO: enemy spawning
+};
+
+GameState.prototype.render = function() {
+  //this.game.debug.body(this.player);
 };
