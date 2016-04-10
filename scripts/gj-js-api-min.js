@@ -1,6 +1,6 @@
 var GJAPI={};
-GJAPI.iGameID    = 0;      // # change this
-GJAPI.sGameKey   = "";     // # change this too
+GJAPI.iGameID    = 139981;      // # change this
+GJAPI.sGameKey   = "e58fb3c6c8a006d2131874b2b43bc9d1";     // # change this too
 GJAPI.bAutoLogin = true;   // automatically log in users on Game Jolt
 
 0!==GJAPI.iGameID&&""!==GJAPI.sGameKey||alert("Game ID or Game Key missing!");GJAPI.sAPI="http://gamejolt.com/api/game/v1";GJAPI.sLogName="[Game Jolt API]";GJAPI.iLogStack=20;GJAPI.asQueryParam=function(){for(var a={},f=window.location.search.substring(1).split("&"),c=0;c<f.length;++c){var b=f[c].split("=");"undefined"===typeof a[b[0]]?a[b[0]]=b[1]:"string"===typeof a[b[0]]?a[b[0]]=[a[b[0]],b[1]]:a[b[0]].push(b[1])}return a}();
