@@ -1,5 +1,5 @@
-var LASSO_DY = 150;
-var LASSO_LIFESPAN = 400;
+var LASSO_DY = 100;
+var LASSO_LIFESPAN = 600;
 
 // Lasso is a series of sprites that models the lifetime
 // of the lasso. The first stage is the travel, which

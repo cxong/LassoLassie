@@ -29,10 +29,11 @@ var Player = function(
 
   // When firing, the player is frozen for a bit
   this.fireCounter = 0;
-  this.FIRE_DURATION_TOTAL = 500;
-  this.LASSO_DURATION_TOTAL = 1000;
+  this.FIRE_DURATION_TOTAL = 800;
+  this.LASSO_DURATION_TOTAL = 1300;
   this.FIRE_FREEZE_DURATION = 300;
-  this.BULLET_LIFESPAN = 200;
+  this.BULLET_LIFESPAN = 320;
+  this.BULLET_DY = 180;
 
   this.invincibilityCounter = 2000;
 
@@ -71,7 +72,7 @@ Player.prototype.fire = function() {
     this.game, this.bulletGroup, this.hitGroup,
     this.BULLET_LIFESPAN,
     'player_bullet', 'player_explosion',
-    this.x, this.y, 0, -300
+    this.x, this.y, 0, -this.BULLET_DY
   );
   this.fireCounter = this.FIRE_DURATION_TOTAL;
   // TODO: firing animation
