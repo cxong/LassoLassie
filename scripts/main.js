@@ -12,6 +12,7 @@ GameState.prototype.create = function() {
     catch: this.game.add.audio('catch'),
     die: this.game.add.audio('die'),
     hit: this.game.add.audio('hit'),
+    nospawn: this.game.add.audio('nospawn'),
     respawn: this.game.add.audio('respawn'),
     spawn: this.game.add.audio('spawn')
   };
@@ -82,19 +83,13 @@ GameState.prototype.start = function() {
     spawn3: Phaser.Keyboard.THREE
   });
   this.keys.spawn1.onDown.add(function() {
-    if (this.spawner.trySpawn('outlaw')) {
-      this.spawnAlly('outlaw');
-    }
+    this.spawnAlly('outlaw');
   }, this);
   this.keys.spawn2.onDown.add(function() {
-    if (this.spawner.trySpawn('cowboy')) {
-      this.spawnAlly('cowboy');
-    }
+    this.spawnAlly('cowboy');
   }, this);
   this.keys.spawn3.onDown.add(function() {
-    if (this.spawner.trySpawn('bandito')) {
-      this.spawnAlly('bandito');
-    }
+    this.spawnAlly('bandito');
   }, this);
 
   this.state = 'play';
@@ -116,6 +111,15 @@ GameState.prototype.spawnPlayer = function() {
 };
 
 GameState.prototype.spawnAlly = function(key) {
+  // Can't spawn more than 6 on the field
+  var friendlies = this.groups.players.countLiving();
+  if (this.player.alive) {
+    friendlies--;
+  }
+  if (friendlies >= 6 || !this.spawner.trySpawn(key)) {
+    this.sounds.nospawn.play();
+    return;
+  }
   // Spawn ally near where player is
   var x = Phaser.Math.clamp(
     (Math.random() - 0.5) * 100 + this.player.x,
