@@ -128,7 +128,7 @@ GameState.prototype.spawnAlly = function(key) {
     this.game,
     this.groups.players, this.groups.playerBullets,
     this.groups.playerHits,
-    this.groups.enemies,
+    this.groups.enemies, this.groups.bg,
     x, SCREEN_HEIGHT, EnemyTypes[key], false);
   this.sounds.spawn.play();
 };
@@ -139,7 +139,7 @@ GameState.prototype.spawnEnemy = function(key) {
     this.game,
     this.groups.enemies, this.groups.enemyBullets,
     this.groups.enemyHits,
-    this.groups.players,
+    this.groups.players, this.groups.bg,
     Math.random() * SCREEN_WIDTH, 0,
     EnemyTypes[key], true);
 };
@@ -183,7 +183,7 @@ GameState.prototype.update = function() {
       function(hit, enemy) {
         // TODO: enemy kill effects
         hit.kill();
-        enemy.kill();
+        enemy.killAndLeaveCorpse();
         this.sounds.hit.play();
       }, null, this
     );
@@ -207,7 +207,7 @@ GameState.prototype.update = function() {
           // Can't kill when invincible
           return;
         }
-        player.kill();
+        player.killAndLeaveCorpse();
         if (player === this.player) {
           this.sounds.die.play();
         } else {

@@ -109,3 +109,8 @@ Player.prototype.update = function() {
     this.fireCounter -= this.game.time.elapsed;
   }
 };
+
+Player.prototype.killAndLeaveCorpse = function() {
+  // TODO: die animation
+  this.kill();
+};

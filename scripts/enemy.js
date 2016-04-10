@@ -30,6 +30,7 @@ var EnemyTypes = {
 
 var Enemy = function(
   game, group, bulletGroup, hitGroup, friendlyGroup,
+  bgGroup,
   x, y, enemyType, isEnemy) {
   var key = enemyType.name;
   if (!isEnemy) {
@@ -49,7 +50,6 @@ var Enemy = function(
   this.animations.add('fire', [0, 1], 10, false);
   this.animations.add('idle', [2, 3], 2, true);
   this.animations.add('walk', [4, 5], 10, true);
-  this.animations.add('die', [6, 7], 4, false);
 
   // State machine
   // Initialise state to 'entering' - running onto
@@ -69,6 +69,7 @@ var Enemy = function(
   this.game = game;
   this.hitGroup = hitGroup;
   this.friendlyGroup = friendlyGroup;
+  this.bgGroup = bgGroup;
 };
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -234,4 +235,15 @@ Enemy.prototype.capture = function() {
   this.lifespan = LASSO_LIFESPAN;
   this.animations.stop();
   this.frame = 6;
+};
+
+Enemy.prototype.killAndLeaveCorpse = function() {
+  this.kill();
+  // Leave a corpse on the background layer
+  var corpse = this.game.make.sprite(
+    this.x, this.y, this.key);
+  corpse.anchor.setTo(0.5);
+  corpse.animations.add('die', [6, 7], 2, false);
+  corpse.animations.play('die');
+  this.bgGroup.add(corpse);
 };
