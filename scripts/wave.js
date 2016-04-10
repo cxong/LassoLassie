@@ -6,10 +6,10 @@ var Wave = function(game, groups) {
 };
 
 Wave.prototype.spawn = function() {
-  var total = 2 + Math.floor(Math.sqrt(this.wave));
+  var total = 4 + Math.floor(Math.sqrt(this.wave)*2);
   var choices = ['outlaw', 'cowboy', 'bandito'];
   if (this.wave === 1) {
-    // Always start with 3 outlaws
+    // Always start with outlaws
     choices = ['outlaw'];
   } else if (this.wave === 2) {
     choices = ['outlaw', 'cowboy'];
@@ -30,6 +30,18 @@ Wave.prototype.spawnOne = function(key) {
     EnemyTypes[key], true, this);
 };
 
-Wave.prototype.speed = function(speed) {
+Wave.prototype.speed = function() {
   return Math.sqrt(this.wave) / 5 + 0.8;
+};
+
+Wave.prototype.bulletSpeed = function() {
+  return 50 + this.wave;
+};
+
+Wave.prototype.bulletLifespan = function() {
+  return Math.pow(0.99, this.wave);
+};
+
+Wave.prototype.fireCounter = function() {
+  return Math.pow(0.98, this.wave);
 };

@@ -68,6 +68,7 @@ GameState.prototype.start = function() {
 
   this.groups.enemies.destroy(true, true);
   this.wave = new Wave(this.game, this.groups);
+  this.friendlyWave = new Wave(this.game, this.groups);
   // Enemies will be spawned automatically by wave
 
   // Initialise controls
@@ -130,7 +131,8 @@ GameState.prototype.spawnAlly = function(key) {
     this.groups.players, this.groups.playerBullets,
     this.groups.playerHits,
     this.groups.enemies, this.groups.bg,
-    x, SCREEN_HEIGHT, EnemyTypes[key], false, this.wave);
+    x, SCREEN_HEIGHT, EnemyTypes[key], false,
+    this.friendlyWave);
   this.sounds.spawn.play();
 };
 

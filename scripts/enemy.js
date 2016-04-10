@@ -98,6 +98,7 @@ Enemy.prototype.update = function() {
     if (stateChange) {
       this.body.velocity.setTo(0);
       this.animations.play('idle');
+      this.stateCounter *= this.wave.idleStateCounter();
     }
     break;
     case 'move':
@@ -177,11 +178,12 @@ Enemy.prototype.update = function() {
           (Math.random() - 0.5) * this.enemyType.spread
         );
       }
-      var magnitude = 50;
+      var magnitude = this.wave.bulletSpeed();
       // Hard counter
       if (target &&
         target.key === this.enemyType.counters) {
-        var idealMagnitude = this.fireDirection.getMagnitude() / (this.enemyType.bulletLifespan / 1000.0);
+        var lifespan = this.wave.bulletLifespan() * this.enemyType.bulletLifespan;
+        var idealMagnitude = this.fireDirection.getMagnitude() / (lifespan / 1000.0);
         if (idealMagnitude < magnitude * 2) {
           magnitude = idealMagnitude;
         }
@@ -214,7 +216,7 @@ Enemy.prototype.fire = function() {
   if (this.fireCounter > 0) {
     this.fireCounter -= this.game.time.elapsed;
   } else {
-    this.fireCounter = this.enemyType.fireCounter;
+    this.fireCounter = this.wave.fireCounter() * this.enemyType.fireCounter;
     var bulletKey = 'enemy_bullet';
     var explosionKey = 'enemy_explosion';
     if (!this.isEnemy) {
@@ -223,7 +225,7 @@ Enemy.prototype.fire = function() {
     }
     new Bullet(
       this.game, this.bulletGroup, this.hitGroup,
-      this.enemyType.bulletLifespan,
+      this.wave.bulletLifespan() * this.enemyType.bulletLifespan,
       bulletKey, explosionKey, this.x, this.y,
       this.fireDirection.x, this.fireDirection.y
     );
