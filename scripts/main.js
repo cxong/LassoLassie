@@ -28,8 +28,22 @@ GameState.prototype.create = function() {
     lasso: this.game.add.group(),
     spawnerIcons: this.game.add.group(),
     lifeCounters: this.game.add.group(),
+    text: this.game.add.group(),
     dialogs: this.game.add.group()
   };
+
+  this.text = this.game.add.text(
+    SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, '', {
+      font: '36px VT323', fill: '#fff', align: 'center'
+    }
+  );
+  this.text.anchor.set(0.5);
+  this.groups.text.add(this.text);
+  this.textCounter = 0;
+
+  this.spawner = new Spawner(
+    this.game, this.groups.spawnerIcons
+  );
 
   this.dialog = new Dialog(this.game, this.groups.dialogs, 0, 0);
 
@@ -63,9 +77,9 @@ GameState.prototype.start = function() {
   }
 
   // Spawn counters
-  this.spawner = new Spawner(
-    this.game, this.groups.spawnerIcons
-  );
+  this.spawner.reset();
+
+  this.groups.bg.destroy(true, true);
 
   this.groups.players.destroy(true, true);
   this.spawnPlayer();
@@ -109,6 +123,7 @@ GameState.prototype.spawnPlayer = function() {
     this.game.input.keyboard.addKey(Phaser.Keyboard.Z).onDown.add(function() {
       this.restart();
     }, this);
+    this.setText('Game Over');
     // TODO: sad game over music
   } else {
     this.player = new Player(
@@ -149,6 +164,11 @@ GameState.prototype.spawnAlly = function(key) {
 
 GameState.prototype.update = function() {
   if (this.state === 'play') {
+    this.textCounter -= this.game.time.elapsed;
+    if (this.textCounter <= 0) {
+      this.groups.text.alpha = 0;
+    }
+
     // Move using arrow keys
     var dx = 0;
     var dy = 0;
@@ -234,8 +254,15 @@ GameState.prototype.update = function() {
     this.groups.enemies.countLiving() === 0) {
     this.wave.wave++;
     this.wave.spawn();
+    this.setText('Wave ' + this.wave.wave);
     // TODO: some sort of incidental music
   }
+};
+
+GameState.prototype.setText = function(text) {
+  this.text.text = text;
+  this.textCounter = 3000;
+  this.groups.text.alpha = 1;
 };
 
 GameState.prototype.render = function() {

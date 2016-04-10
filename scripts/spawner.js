@@ -20,6 +20,13 @@ var Spawner = function(game, group) {
   addDisplay('bandito_icon', 2, 'bandito', this);
 };
 
+Spawner.prototype.reset = function() {
+  this.counts = {outlaw: 2, cowboy: 2, bandito: 2};
+  this.updateText('outlaw');
+  this.updateText('cowboy');
+  this.updateText('bandito');
+};
+
 Spawner.prototype.add = function(key) {
   // Max counts
   if (this.counts[key] >= 9) {
