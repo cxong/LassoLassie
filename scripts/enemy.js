@@ -5,7 +5,8 @@ var EnemyTypes = {
     stateCounter: 2000,
     fireCounter: 1500,
     spread: 15,
-    bulletLifespan: 1500
+    bulletLifespan: 1500,
+    counters: 'bandito'
   },
   cowboy: {
     name: 'cowboy',
@@ -13,7 +14,8 @@ var EnemyTypes = {
     stateCounter: 1500,
     fireCounter: 1000,
     spread: 20,
-    bulletLifespan: 1300
+    bulletLifespan: 1300,
+    counters: 'outlaw'
   },
   bandito: {
     name: 'bandito',
@@ -21,7 +23,8 @@ var EnemyTypes = {
     stateCounter: 2500,
     fireCounter: 1000,
     spread: 10,
-    bulletLifespan: 2000
+    bulletLifespan: 2000,
+    counters: 'cowboy'
   }
 };
 
@@ -97,14 +100,15 @@ Enemy.prototype.update = function() {
     break;
     case 'move':
     if (stateChange) {
-      var targetPosition = null;
+      var target = null;
       if (Math.random() < 0.5) {
         // Move towards an enemy
-        targetPosition = this.getClosestTargetPosition();
+        target = this.getClosestTarget();
       }
       var v;
-      if (targetPosition) {
+      if (target) {
         // Stay in front of the enemy
+        var targetPosition = target.position.clone();
         if (this.isEnemy) {
           targetPosition.y -= 60;
         } else {
@@ -135,12 +139,13 @@ Enemy.prototype.update = function() {
       // Find a new direction to fire
       // Randomly choose to fire in the general direction
       // of the player
-      var targetPosition = null;
+      var target = null;
       if (Math.random() < 0.5) {
         // Fire at closest target
-        targetPosition = this.getClosestTargetPosition();
+        target = this.getClosestTarget();
       }
-      if (!targetPosition) {
+      var targetPosition;
+      if (!target) {
         // target a random point on the field
         if (this.isEnemy) {
           // Target lower half of field
@@ -155,17 +160,31 @@ Enemy.prototype.update = function() {
             Math.random() / 2 * SCREEN_HEIGHT
           );
         }
+      } else {
+        targetPosition = target.position.clone();
       }
-      // Add a random offset
       this.fireDirection = Phaser.Point.subtract(
         targetPosition, this.position
       );
-      this.fireDirection.add(
-        (Math.random() - 0.5) * this.enemyType.spread,
-        (Math.random() - 0.5) * this.enemyType.spread
-      );
+      // Add a random offset
+      if (!target ||
+        target.key !== this.enemyType.counters) {
+        this.fireDirection.add(
+          (Math.random() - 0.5) * this.enemyType.spread,
+          (Math.random() - 0.5) * this.enemyType.spread
+        );
+      }
+      var magnitude = 50;
+      // Hard counter
+      if (target &&
+        target.key === this.enemyType.counters) {
+        var idealMagnitude = this.fireDirection.getMagnitude() / (this.enemyType.bulletLifespan / 1000.0);
+        if (idealMagnitude < magnitude * 2) {
+          magnitude = idealMagnitude;
+        }
+      }
       this.fireDirection = this.fireDirection.normalize();
-      this.fireDirection.setMagnitude(50);
+      this.fireDirection.setMagnitude(magnitude);
     }
     this.fire();
     this.body.velocity.setTo(0);
@@ -173,20 +192,19 @@ Enemy.prototype.update = function() {
   }
 };
 
-Enemy.prototype.getClosestTargetPosition = function() {
-  var targetPosition = null;
+Enemy.prototype.getClosestTarget = function() {
+  var target = null;
   var minDistance = -1;
   this.friendlyGroup.forEach(function(friendly) {
     var distance = this.game.physics.arcade.distanceBetween(
       this, friendly
     );
-    if (targetPosition === null ||
-      minDistance > distance) {
-      targetPosition = friendly.position.clone();
+    if (target === null || minDistance > distance) {
+      target = friendly;
       minDistance = distance;
     }
   }, this);
-  return targetPosition;
+  return target;
 };
 
 Enemy.prototype.fire = function() {
