@@ -249,6 +249,7 @@ Enemy.prototype.killAndLeaveCorpse = function() {
   corpse.anchor.setTo(0.5);
   corpse.animations.add('die', [6, 7], 2, false);
   corpse.animations.play('die');
+  corpse.tint = 0x666666;
   this.bgGroup.add(corpse);
 };
 
