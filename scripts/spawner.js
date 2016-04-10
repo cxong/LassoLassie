@@ -1,5 +1,5 @@
 var Spawner = function(game, group) {
-  this.counts = {outlaw: 0, cowboy: 0, bandito: 0};
+  this.counts = {outlaw: 2, cowboy: 2, bandito: 2};
   this.texts = {};
   var y = SCREEN_HEIGHT - 10 - 16;
   var style = {

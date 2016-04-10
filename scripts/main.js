@@ -66,12 +66,8 @@ GameState.prototype.start = function() {
   this.spawnPlayer();
 
   this.groups.enemies.destroy(true, true);
-  this.spawnEnemy('outlaw');
-  this.spawnEnemy('outlaw');
-  this.spawnEnemy('cowboy');
-  this.spawnEnemy('cowboy');
-  this.spawnEnemy('bandito');
-  this.spawnEnemy('bandito');
+  this.wave = new Wave(this.game, this.groups);
+  // Enemies will be spawned automatically by wave
 
   // Initialise controls
   this.keys = this.game.input.keyboard.addKeys({
@@ -131,17 +127,6 @@ GameState.prototype.spawnAlly = function(key) {
     this.groups.enemies, this.groups.bg,
     x, SCREEN_HEIGHT, EnemyTypes[key], false);
   this.sounds.spawn.play();
-};
-
-GameState.prototype.spawnEnemy = function(key) {
-  // Spawn enemy along top
-  new Enemy(
-    this.game,
-    this.groups.enemies, this.groups.enemyBullets,
-    this.groups.enemyHits,
-    this.groups.players, this.groups.bg,
-    Math.random() * SCREEN_WIDTH, 0,
-    EnemyTypes[key], true);
 };
 
 GameState.prototype.update = function() {
@@ -225,7 +210,12 @@ GameState.prototype.update = function() {
       }
     }
 
-    // TODO: enemy spawning
+    // Enemy spawning
+    if (this.groups.enemies.countLiving() === 0) {
+      this.wave.wave++;
+      this.wave.spawn();
+      // TODO: some sort of incidental music
+    }
   }
 };
 
