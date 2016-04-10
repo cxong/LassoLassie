@@ -42,12 +42,18 @@ var Enemy = function(
   this.isEnemy = isEnemy;
   this.captured = false;
 
+  // animations
+  this.animations.add('fire', [0, 1], 10, false);
+  this.animations.add('idle', [2, 3], 2, true);
+  this.animations.add('walk', [4, 5], 10, true);
+  this.animations.add('die', [6, 7], 4, false);
+
   // State machine
   // Initialise state to 'entering' - running onto
   // the field
   this.state = 'entering';
   this.stateCounter = Math.random() * 500 + 500;
-  // TODO: running animation
+  this.animations.play('walk');
   if (this.isEnemy) {
     this.body.velocity.y = this.enemyType.speed * 2;
   } else {
@@ -86,6 +92,7 @@ Enemy.prototype.update = function() {
     case 'idle':
     if (stateChange) {
       this.body.velocity.setTo(0);
+      this.animations.play('idle');
     }
     break;
     case 'move':
@@ -120,6 +127,7 @@ Enemy.prototype.update = function() {
       v.x *= this.enemyType.speed;
       v.y *= this.enemyType.speed;
       this.body.velocity = v;
+      this.animations.play('walk');
     }
     break;
     case 'fire':
@@ -198,6 +206,7 @@ Enemy.prototype.fire = function() {
       bulletKey, explosionKey, this.x, this.y,
       this.fireDirection.x, this.fireDirection.y
     );
+    this.animations.play('fire');
   }
 };
 
@@ -205,5 +214,6 @@ Enemy.prototype.capture = function() {
   this.captured = true;
   this.body.velocity.setTo(0, LASSO_DY);
   this.lifespan = LASSO_LIFESPAN;
-  // TODO: captured animation
+  this.animations.stop();
+  this.frame = 6;
 };
