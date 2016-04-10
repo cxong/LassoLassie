@@ -273,6 +273,7 @@ GameState.prototype.update = function() {
     this.setText('Wave ' + this.wave.wave);
     this.waveText.text = 'Wave ' + this.wave.wave;
     // TODO: some sort of incidental music
+    GJAPI.ScoreAdd(0, this.wave.wave, 'Waves');
   }
 };
 
