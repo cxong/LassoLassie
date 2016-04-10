@@ -18,6 +18,7 @@ GameState.prototype.create = function() {
   };
 
   this.groups = {
+    ground: this.game.add.group(),
     bg: this.game.add.group(),
     enemies: this.game.add.group(),
     players: this.game.add.group(),
@@ -31,6 +32,10 @@ GameState.prototype.create = function() {
     text: this.game.add.group(),
     dialogs: this.game.add.group()
   };
+
+  var sand = this.game.add.tileSprite(
+    0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 'sand');
+  this.groups.ground.add(sand);
 
   this.text = this.game.add.text(
     SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, '', {

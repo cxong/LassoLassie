@@ -18,7 +18,7 @@ var assets = {
     'ally_bullet', 'ally_explosion',
     'enemy_bullet', 'enemy_explosion',
     'crosshair', 'health', 'lasso', 'lasso_hit',
-    'player_bullet', 'player_explosion', 'rope'
+    'player_bullet', 'player_explosion', 'rope', 'sand'
   ],
   sounds: [
     'catch', 'die', 'hit', 'lasso_in', 'lasso_out',
