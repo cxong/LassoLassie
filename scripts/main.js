@@ -274,12 +274,7 @@ GameState.prototype.update = function() {
     this.waveText.text = 'Wave ' + this.wave.wave;
     // TODO: some sort of incidental music
     if (GJAPI.bActive) {
-      var sSaveUserName  = GJAPI.sUserName;
-      var sSaveUserToken = GJAPI.sUserToken;
-      GJAPI.UserLogout();
-      GJAPI.UserLoginManual(sSaveUserName, sSaveUserToken, function(pResponse) {
-        GJAPI.ScoreAdd(0, this.wave.wave, 'Waves');
-      });
+      GJAPI.ScoreAdd(0, this.wave.wave, 'Waves');
     }
   }
 };
