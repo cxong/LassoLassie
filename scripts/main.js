@@ -31,15 +31,19 @@ GameState.prototype.create = function() {
     dialogs: this.game.add.group()
   };
 
-  // States: start, dialog, play
-  this.state = 'dialog';
-
   this.dialog = new Dialog(this.game, this.groups.dialogs, 0, 0);
 
+  // States: dialog, play, over
+  this.restart();
+};
+
+GameState.prototype.restart = function() {
+  this.state = 'dialog';
+  this.groups.dialogs.alpha = 1;
   this.game.input.keyboard.addKey(Phaser.Keyboard.Z).onDown.add(function() {
-  this.game.input.keyboard.removeKey(Phaser.Keyboard.Z);
     this.start();
   }, this);
+  // TODO: incidental music
 };
 
 GameState.prototype.start = function() {
@@ -72,6 +76,7 @@ GameState.prototype.start = function() {
   // Enemies will be spawned automatically by wave
 
   // Initialise controls
+  this.game.input.keyboard.reset(true);
   this.keys = this.game.input.keyboard.addKeys({
     up: Phaser.Keyboard.UP,
     down: Phaser.Keyboard.DOWN,
@@ -94,12 +99,17 @@ GameState.prototype.start = function() {
   }, this);
 
   this.state = 'play';
+  // TODO: incidental music
 };
 
 GameState.prototype.spawnPlayer = function() {
   if (this.groups.lifeCounters.total === 0) {
-    console.log('GAME OVER!');
-    // TODO: game over screen, reset to title
+    this.state = 'over';
+    this.game.input.keyboard.reset(true);
+    this.game.input.keyboard.addKey(Phaser.Keyboard.Z).onDown.add(function() {
+      this.restart();
+    }, this);
+    // TODO: sad game over music
   } else {
     this.player = new Player(
       this.game,
@@ -109,6 +119,7 @@ GameState.prototype.spawnPlayer = function() {
       SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, []);
     this.playerRespawnCounter = 2000;
     this.groups.lifeCounters.getFirstExists().destroy();
+    this.sounds.respawn.play();
   }
 };
 
@@ -163,67 +174,67 @@ GameState.prototype.update = function() {
       this.player.lasso();
     }
 
-    // Depth sort
-    this.groups.enemies.sort(
-      'y', Phaser.Group.SORT_ASCENDING);
-    this.groups.players.sort(
-      'y', Phaser.Group.SORT_ASCENDING);
-
-    // Player bullets to enemy
-    this.game.physics.arcade.overlap(
-      this.groups.playerHits, this.groups.enemies,
-      function(hit, enemy) {
-        // TODO: enemy kill effects
-        hit.kill();
-        enemy.killAndLeaveCorpse();
-        this.sounds.hit.play();
-      }, null, this
-    );
-
-    // Lasso
-    this.game.physics.arcade.overlap(
-      this.groups.lasso, this.groups.enemies,
-      function(lasso, enemy) {
-        enemy.capture();
-        lasso.kill();
-        if (this.spawner.add(enemy.key)) {
-          this.sounds.catch.play();
-        }
-      }, null, this
-    );
-
-    // Enemy bullets to players
-    this.game.physics.arcade.overlap(
-      this.groups.enemyHits, this.groups.players,
-      function(hit, player) {
-        if (player.invincibilityCounter > 0) {
-          // Can't kill when invincible
-          return;
-        }
-        player.killAndLeaveCorpse();
-        if (player === this.player) {
-          this.sounds.die.play();
-        } else {
-          this.sounds.hit.play();
-        }
-      }, null, this
-    );
-
     // Player respawn
-    if (!this.player.alive) {
+    if (this.player && !this.player.alive) {
       this.playerRespawnCounter -= this.game.time.elapsed;
       if (this.playerRespawnCounter <= 0) {
         this.spawnPlayer();
-        this.sounds.respawn.play();
       }
     }
+  }
 
-    // Enemy spawning
-    if (this.groups.enemies.countLiving() === 0) {
-      this.wave.wave++;
-      this.wave.spawn();
-      // TODO: some sort of incidental music
-    }
+  // Depth sort
+  this.groups.enemies.sort(
+    'y', Phaser.Group.SORT_ASCENDING);
+  this.groups.players.sort(
+    'y', Phaser.Group.SORT_ASCENDING);
+
+  // Player bullets to enemy
+  this.game.physics.arcade.overlap(
+    this.groups.playerHits, this.groups.enemies,
+    function(hit, enemy) {
+      // TODO: enemy kill effects
+      hit.kill();
+      enemy.killAndLeaveCorpse();
+      this.sounds.hit.play();
+    }, null, this
+  );
+
+  // Lasso
+  this.game.physics.arcade.overlap(
+    this.groups.lasso, this.groups.enemies,
+    function(lasso, enemy) {
+      enemy.capture();
+      lasso.kill();
+      if (this.spawner.add(enemy.key)) {
+        this.sounds.catch.play();
+      }
+    }, null, this
+  );
+
+  // Enemy bullets to players
+  this.game.physics.arcade.overlap(
+    this.groups.enemyHits, this.groups.players,
+    function(hit, player) {
+      if (player.invincibilityCounter > 0) {
+        // Can't kill when invincible
+        return;
+      }
+      player.killAndLeaveCorpse();
+      if (player === this.player) {
+        this.sounds.die.play();
+      } else {
+        this.sounds.hit.play();
+      }
+    }, null, this
+  );
+
+  // Enemy spawning
+  if (this.wave &&
+    this.groups.enemies.countLiving() === 0) {
+    this.wave.wave++;
+    this.wave.spawn();
+    // TODO: some sort of incidental music
   }
 };
 

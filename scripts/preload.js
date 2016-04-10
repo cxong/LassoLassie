@@ -5,7 +5,6 @@ BasicGame.Preload = function (game) {
 
 var assets = {
   spritesheets: [
-    ['lassie', 24, 24],
     ['dialog', 320, 240],
     ['outlaw', 24, 24],
     ['cowboy', 24, 24],
@@ -29,11 +28,13 @@ var assets = {
 
 BasicGame.Preload.prototype = {
   preload: function () {
-    this.preloadBar = this.add.sprite((SCREEN_WIDTH - 32) / 2,
-                                      (SCREEN_HEIGHT - 32) / 2,
-                                      'icon');
-    this.preloadBar.animations.add('bob', [0, 1], 4, true);
-    this.preloadBar.animations.play('bob');
+    this.preloadBar = this.add.sprite((SCREEN_WIDTH - 24) / 2,
+                                      (SCREEN_HEIGHT - 24) / 2,
+                                      'lassie');
+    this.preloadBar.animations.add(
+      'run_right', [12, 13, 14, 15], 20, true
+    );
+    this.preloadBar.animations.play('run_right');
     this.load.setPreloadSprite(this.preloadBar);
 
     var basicGame = this;

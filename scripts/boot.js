@@ -12,7 +12,9 @@ BasicGame.Boot.prototype = {
   },
 
   preload: function () {
-    this.game.load.spritesheet('icon', 'images/icon.png', 32, 32);
+    this.game.load.spritesheet(
+      'lassie', 'images/lassie.png', 24, 24
+    );
   },
 
   create: function () {
