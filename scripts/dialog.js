@@ -3,10 +3,6 @@ var Dialog = function(game, group, x, y) {
                      game,
                      x, y,
                      'dialog');
-  this.width *= 2;
-  this.height *= 2;
-  this.x -= this.width / 2;
-  this.y -= this.height / 2;
   this.animations.add('bob', [0, 1], 4, true);
   this.animations.play('bob');
 

@@ -25,12 +25,30 @@ GameState.prototype.create = function() {
     enemyHits: this.game.add.group(),
     playerHits: this.game.add.group(),
     lasso: this.game.add.group(),
-    dialogs: this.game.add.group(),
     spawnerIcons: this.game.add.group(),
-    lifeCounters: this.game.add.group()
+    lifeCounters: this.game.add.group(),
+    dialogs: this.game.add.group()
   };
 
+  // States: start, dialog, play
+  this.state = 'dialog';
+
+  this.dialog = new Dialog(this.game, this.groups.dialogs, 0, 0);
+
+  this.game.input.keyboard.addKey(Phaser.Keyboard.Z).onDown.add(function() {
+  this.game.input.keyboard.removeKey(Phaser.Keyboard.Z);
+    this.start();
+  }, this);
+};
+
+GameState.prototype.start = function() {
+  // Hide dialog
+  this.groups.dialogs.alpha = 0;
+
+  // Spawn player and enemies
+
   // Life counters
+  this.groups.lifeCounters.destroy();
   for (var i = 2; i >= 0; i--) {
     this.groups.lifeCounters.add(
       this.game.make.sprite(
@@ -44,9 +62,10 @@ GameState.prototype.create = function() {
     this.game, this.groups.spawnerIcons
   );
 
+  this.groups.players.destroy(true, true);
   this.spawnPlayer();
 
-  // Add some enemies
+  this.groups.enemies.destroy(true, true);
   this.spawnEnemy('outlaw');
   this.spawnEnemy('outlaw');
   this.spawnEnemy('cowboy');
@@ -54,10 +73,7 @@ GameState.prototype.create = function() {
   this.spawnEnemy('bandito');
   this.spawnEnemy('bandito');
 
-  this.dialog = new Dialog(this.game, this.groups.dialogs,0, 0);
-  // Hide dialog initially
-  this.groups.dialogs.alpha = 0;
-
+  // Initialise controls
   this.keys = this.game.input.keyboard.addKeys({
     up: Phaser.Keyboard.UP,
     down: Phaser.Keyboard.DOWN,
@@ -84,6 +100,8 @@ GameState.prototype.create = function() {
       this.spawnAlly('bandito');
     }
   }, this);
+
+  this.state = 'play';
 };
 
 GameState.prototype.spawnPlayer = function() {
@@ -127,86 +145,88 @@ GameState.prototype.spawnEnemy = function(key) {
 };
 
 GameState.prototype.update = function() {
-  // Move using arrow keys
-  var dx = 0;
-  var dy = 0;
-  if (this.keys.left.isDown) {
-    dx = -1;
-  } else if (this.keys.right.isDown) {
-    dx = 1;
-  }
-  if (this.keys.up.isDown) {
-    dy = -1;
-  } else if (this.keys.down.isDown) {
-    dy = 1;
-  }
-  this.player.move(dx, dy);
-
-  // firing
-  if (this.keys.fire.isDown) {
-    this.player.fire();
-  }
-
-  // Lassoing
-  if (this.keys.lasso.isDown) {
-    this.player.lasso();
-  }
-
-  // Depth sort
-  this.groups.enemies.sort(
-    'y', Phaser.Group.SORT_ASCENDING);
-  this.groups.players.sort(
-    'y', Phaser.Group.SORT_ASCENDING);
-
-  // Player bullets to enemy
-  this.game.physics.arcade.overlap(
-    this.groups.playerHits, this.groups.enemies,
-    function(hit, enemy) {
-      // TODO: enemy kill effects
-      hit.kill();
-      enemy.kill();
-      this.sounds.hit.play();
-    }, null, this
-  );
-
-  // Lasso
-  this.game.physics.arcade.overlap(
-    this.groups.lasso, this.groups.enemies,
-    function(lasso, enemy) {
-      enemy.capture();
-      lasso.kill();
-      this.spawner.add(enemy.key);
-      this.sounds.catch.play();
-    }, null, this
-  );
-
-  // Enemy bullets to players
-  this.game.physics.arcade.overlap(
-    this.groups.enemyHits, this.groups.players,
-    function(hit, player) {
-      if (player.invincibilityCounter > 0) {
-        // Can't kill when invincible
-        return;
-      }
-      player.kill();
-      if (player === this.player) {
-        this.sounds.die.play();
-      } else {
-        this.sounds.hit.play();
-      }
-    }, null, this
-  );
-
-  // Player respawn
-  if (!this.player.alive) {
-    this.playerRespawnCounter -= this.game.time.elapsed;
-    if (this.playerRespawnCounter <= 0) {
-      this.spawnPlayer();
-      this.sounds.respawn.play();
+  if (this.state === 'play') {
+    // Move using arrow keys
+    var dx = 0;
+    var dy = 0;
+    if (this.keys.left.isDown) {
+      dx = -1;
+    } else if (this.keys.right.isDown) {
+      dx = 1;
     }
-  }
+    if (this.keys.up.isDown) {
+      dy = -1;
+    } else if (this.keys.down.isDown) {
+      dy = 1;
+    }
+    this.player.move(dx, dy);
 
-  // TODO: enemy spawning
+    // firing
+    if (this.keys.fire.isDown) {
+      this.player.fire();
+    }
+
+    // Lassoing
+    if (this.keys.lasso.isDown) {
+      this.player.lasso();
+    }
+
+    // Depth sort
+    this.groups.enemies.sort(
+      'y', Phaser.Group.SORT_ASCENDING);
+    this.groups.players.sort(
+      'y', Phaser.Group.SORT_ASCENDING);
+
+    // Player bullets to enemy
+    this.game.physics.arcade.overlap(
+      this.groups.playerHits, this.groups.enemies,
+      function(hit, enemy) {
+        // TODO: enemy kill effects
+        hit.kill();
+        enemy.kill();
+        this.sounds.hit.play();
+      }, null, this
+    );
+
+    // Lasso
+    this.game.physics.arcade.overlap(
+      this.groups.lasso, this.groups.enemies,
+      function(lasso, enemy) {
+        enemy.capture();
+        lasso.kill();
+        this.spawner.add(enemy.key);
+        this.sounds.catch.play();
+      }, null, this
+    );
+
+    // Enemy bullets to players
+    this.game.physics.arcade.overlap(
+      this.groups.enemyHits, this.groups.players,
+      function(hit, player) {
+        if (player.invincibilityCounter > 0) {
+          // Can't kill when invincible
+          return;
+        }
+        player.kill();
+        if (player === this.player) {
+          this.sounds.die.play();
+        } else {
+          this.sounds.hit.play();
+        }
+      }, null, this
+    );
+
+    // Player respawn
+    if (!this.player.alive) {
+      this.playerRespawnCounter -= this.game.time.elapsed;
+      if (this.playerRespawnCounter <= 0) {
+        this.spawnPlayer();
+        this.sounds.respawn.play();
+      }
+    }
+
+    // TODO: enemy spawning
+  }
 };
 
 GameState.prototype.render = function() {
