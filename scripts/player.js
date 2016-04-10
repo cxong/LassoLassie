@@ -1,5 +1,6 @@
 var Player = function(
   game, group, bulletGroup, hitGroup, lassoGroup,
+  bgGroup,
   x, y, soundStrings) {
   Phaser.Sprite.call(this, game, x, y, 'lassie');
   group.add(this);
@@ -9,10 +10,18 @@ var Player = function(
   this.body.setSize(16, 16);
   this.anchor.setTo(0.5);
   this.speed = 60;
-  // TODO: check body
-  // TODO: animations
-  //this.animations.add('bob', [0, 1], 4, true);
-  //this.animations.play('bob');
+  // animations
+  this.animations.add('lasso', [0, 1, 2, 3], 20, false);
+  this.animations.add('fire', [4, 5, 6, 7], 20, false);
+  this.animations.add(
+    'run_left', [8, 9, 10, 11], 20, true
+  );
+  this.animations.add(
+    'run_right', [12, 13, 14, 15], 20, true
+  );
+  this.animations.add('run', [16, 17, 18, 19], 10, true);
+  this.animations.add('idle', [24], 1, true);
+  this.animations.play('idle');
 
   this.sounds = {
     lasso_in: game.add.audio('lasso_in'),
@@ -41,6 +50,7 @@ var Player = function(
   this.hitGroup = hitGroup;
   this.bulletGroup = bulletGroup;
   this.lassoGroup = lassoGroup;
+  this.bgGroup = bgGroup;
 };
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
@@ -53,11 +63,17 @@ Player.prototype.move = function(dx, dy) {
     return;
   }
   if (dx === 0 && dy === 0) {
-    // TODO: idle animation
+    this.animations.play('idle');
     this.body.velocity.setTo(0);
   } else {
     this.body.velocity.setTo(dx * this.speed, dy * this.speed);
-    // TODO: walking animation
+    if (dx > 0) {
+      this.animations.play('run_right');
+    } else if (dx < 0) {
+      this.animations.play('run_left');
+    } else {
+      this.animations.play('run');
+    }
   }
 };
 
@@ -75,7 +91,7 @@ Player.prototype.fire = function() {
     this.x, this.y, 0, -this.BULLET_DY
   );
   this.fireCounter = this.FIRE_DURATION_TOTAL;
-  // TODO: firing animation
+  this.animations.play('fire');
   this.body.velocity.setTo(0);
   this.sounds.shoot.play();
 };
@@ -92,7 +108,7 @@ Player.prototype.lasso = function() {
     this.x, this.y, this.sounds.lasso_in
   );
   this.fireCounter = this.LASSO_DURATION_TOTAL;
-  // TODO: lasso animation
+  this.animations.play('lasso');
   this.body.velocity.setTo(0);
   this.sounds.lasso_out.play();
 };
@@ -112,6 +128,15 @@ Player.prototype.update = function() {
 };
 
 Player.prototype.killAndLeaveCorpse = function() {
-  // TODO: die animation
   this.kill();
+  // Leave a limited corpse on the background layer
+  var corpse = this.game.make.sprite(
+    this.x, this.y, this.key);
+  corpse.anchor.setTo(0.5);
+  corpse.animations.add(
+    'die', [20, 21, 22, 23], 4, false
+  );
+  corpse.animations.play('die');
+  corpse.lifespan = 1000;
+  this.bgGroup.add(corpse);
 };

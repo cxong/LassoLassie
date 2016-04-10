@@ -104,6 +104,7 @@ GameState.prototype.spawnPlayer = function() {
       this.game,
       this.groups.players, this.groups.playerBullets,
       this.groups.playerHits, this.groups.lasso,
+      this.groups.bg,
       SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, []);
     this.playerRespawnCounter = 2000;
     this.groups.lifeCounters.getFirstExists().destroy();
