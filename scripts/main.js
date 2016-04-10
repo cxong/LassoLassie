@@ -40,6 +40,13 @@ GameState.prototype.create = function() {
   this.text.anchor.set(0.5);
   this.groups.text.add(this.text);
   this.textCounter = 0;
+  this.waveText = this.game.add.text(
+    SCREEN_WIDTH / 2, SCREEN_HEIGHT - 14, '', {
+      font: '16px VT323', fill: '#fff', align: 'center'
+    }
+  );
+  this.waveText.anchor.set(0.5);
+  this.groups.text.add(this.waveText);
 
   this.spawner = new Spawner(
     this.game, this.groups.spawnerIcons
@@ -166,7 +173,7 @@ GameState.prototype.update = function() {
   if (this.state === 'play') {
     this.textCounter -= this.game.time.elapsed;
     if (this.textCounter <= 0) {
-      this.groups.text.alpha = 0;
+      this.text.alpha = 0;
     }
 
     // Move using arrow keys
@@ -255,6 +262,7 @@ GameState.prototype.update = function() {
     this.wave.wave++;
     this.wave.spawn();
     this.setText('Wave ' + this.wave.wave);
+    this.waveText.text = 'Wave ' + this.wave.wave;
     // TODO: some sort of incidental music
   }
 };
@@ -262,7 +270,7 @@ GameState.prototype.update = function() {
 GameState.prototype.setText = function(text) {
   this.text.text = text;
   this.textCounter = 3000;
-  this.groups.text.alpha = 1;
+  this.text.alpha = 1;
 };
 
 GameState.prototype.render = function() {
