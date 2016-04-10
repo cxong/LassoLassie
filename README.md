@@ -1,5 +1,9 @@
 # Lasso Lassie
-Old school shooting game for Wild West Jam
+Old school shooting game for [Wild West Jam](http://jams.gamejolt.io/wildwestjam)
+
+[Play Online at Gamejolt](http://gamejolt.com/games/lasso-lassie/139981)
+
+![](https://raw.githubusercontent.com/cxong/LassoLassie/master/thumb.gif)
 
 - Code under MIT
 - [UI pieces](http://opengameart.org/content/ui-pieces) by [Buch](http://opengameart.org/users/buch), CC0
