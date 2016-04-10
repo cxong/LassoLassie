@@ -45,3 +45,7 @@ Wave.prototype.bulletLifespan = function() {
 Wave.prototype.fireCounter = function() {
   return Math.pow(0.98, this.wave);
 };
+
+Wave.prototype.idleStateCounter = function() {
+  return Math.pow(0.97, this.wave);
+};

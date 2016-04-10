@@ -3,7 +3,7 @@ var Dialog = function(game, group, x, y) {
                      game,
                      x, y,
                      'dialog');
-  this.animations.add('bob', [0, 1], 4, true);
+  this.animations.add('bob', [0, 1], 2, true);
   this.animations.play('bob');
 
   group.add(this);
