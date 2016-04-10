@@ -112,9 +112,10 @@ Enemy.prototype.update = function() {
         // Stay in front of the enemy
         var targetPosition = target.position.clone();
         if (this.isEnemy) {
-          targetPosition.y -= 60;
+          targetPosition.y -= 20;
         } else {
-          targetPosition.y += 60;
+          // Friendlies more aggro
+          //targetPosition.y += 20;
         }
         v = Phaser.Point.subtract(
           targetPosition, this.position
@@ -197,7 +198,7 @@ Enemy.prototype.update = function() {
 Enemy.prototype.getClosestTarget = function() {
   var target = null;
   var minDistance = -1;
-  this.friendlyGroup.forEach(function(friendly) {
+  this.friendlyGroup.forEachAlive(function(friendly) {
     var distance = this.game.physics.arcade.distanceBetween(
       this, friendly
     );
