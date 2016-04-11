@@ -1,6 +1,7 @@
 var GameState = function(game){};
 
 GameState.prototype.preload = function() {
+  this.resetKeys();
 };
 
 GameState.prototype.create = function() {
@@ -104,7 +105,7 @@ GameState.prototype.start = function() {
   // Enemies will be spawned automatically by wave
 
   // Initialise controls
-  this.game.input.keyboard.reset(true);
+  this.resetKeys();
   this.keys = this.game.input.keyboard.addKeys({
     up: Phaser.Keyboard.UP,
     down: Phaser.Keyboard.DOWN,
@@ -133,7 +134,7 @@ GameState.prototype.start = function() {
 GameState.prototype.spawnPlayer = function() {
   if (this.groups.lifeCounters.total === 0) {
     this.state = 'over';
-    this.game.input.keyboard.reset(true);
+    this.resetKeys();
     this.game.input.keyboard.addKey(Phaser.Keyboard.Z).onDown.add(function() {
       this.restart();
     }, this);
@@ -283,6 +284,18 @@ GameState.prototype.setText = function(text) {
   this.text.text = text;
   this.textCounter = 3000;
   this.text.alpha = 1;
+};
+
+GameState.prototype.resetKeys = function() {
+  this.game.input.keyboard.reset(true);
+  // Always allow F for fullscreen toggle
+  this.game.input.keyboard.addKey(Phaser.Keyboard.F).onDown.add(function(key) {
+    if (this.game.scale.isFullScreen) {
+        this.game.scale.stopFullScreen();
+    } else {
+        this.game.scale.startFullScreen(false);
+    }
+  }, this);
 };
 
 GameState.prototype.render = function() {

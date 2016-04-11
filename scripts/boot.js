@@ -3,8 +3,9 @@ BasicGame.Boot = function (game) {
 
 BasicGame.Boot.prototype = {
   init: function() {
-    // Stretch to fit screen
+    // Stretch to fit screen, but maintain aspect ratio
     this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
     this.game.scale.pageAlignHorizontally = true;
     this.game.scale.pageAlignVertically = true;
     this.game.scale.compatibility.forceMinimumDocumentHeight = true;
